@@ -1,4 +1,4 @@
-mod_name = "radar-tracker"
+mod_name = "RadarTracker"
 
 require("config")
 
