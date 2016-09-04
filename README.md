@@ -1,7 +1,7 @@
 # RadarTracker
 
 This is a Factorio mod. It adds a new radar called "train-tracker".
-The train-tracker maps 
+Train charts then onto map.
 
 You need to research radar-tracker technology.
 Place a train-tracker anywhere and the trains scans the area around them.
