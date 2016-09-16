@@ -1,6 +1,8 @@
--- require "defines"
+require 'config'
+require 'stdlib.data.data'
+require 'stdlib.area.area'
 
-require("config")
+expansion = scanned_area / 2
 
 ---------------------------------------------------------------------------------------------------
 
@@ -72,24 +74,16 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 		for index,train in ipairs(global.trains[force.name]) do
 			if train.valid then
 
-				local x1 = train.position.x
-				local y1 = train.position.y
-				local x2 = x1 + train.train.speed * precognotion * math.sin(2*math.pi * train.orientation)
-				local y2 = y1 - train.train.speed * precognotion * math.cos(2*math.pi * train.orientation)
-				
-				if x2 < x1 then 
-					local x = x1
-					x1 = x2
-					x2 = x
-				end
-				if y2 < y1 then
-					local y = y1
-					y1 = y2
-					y2 = y
-				end
-				
-				local scalf = scanned_area / 2
-				force.chart(event.radar.surface,{{x1-scalf, y1-scalf}, {x2+scalf, y2+scalf}})
+				local area = Area.adjust({
+					{
+						train.position.x,
+						train.position.y
+					}, {
+						train.position.x + train.train.speed * precognotion * math.sin(2*math.pi * train.orientation),
+						train.position.y - train.train.speed * precognotion * math.cos(2*math.pi * train.orientation)
+					}
+				})
+				force.chart(event.radar.surface, Area.expand(area, expansion))
 			else
 				table.remove(global.trains[force.name], index)
 			end
