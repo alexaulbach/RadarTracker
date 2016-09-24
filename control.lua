@@ -1,13 +1,29 @@
-require 'config'
 require 'stdlib.data.data'
 require 'stdlib.area.area'
 
+-- debug-purposes
+inspect = require('inspect')
+
+
+require 'config'
+
 expansion = scanned_area / 2
+
+watched_names = {
+	[train-stop]  = "stops",
+	[cargo-wagon] = "trains",
+	[locomotive]  = "trains",
+	[car]         = "cars",
+}
+
 
 ---------------------------------------------------------------------------------------------------
 
 function init()
-	global.trains = global.trains or {}
+	for _, mappedName in pairs(watched_names) do
+		global[mappedName] = global[mappedName] or {}
+	end
+	
 	for _,force in pairs(game.forces) do
 		init_force(force)
 	end
@@ -16,35 +32,36 @@ end
 ---------------------------------------------------------------------------------------------------
 
 function init_force(force)
-	local n_trains = 0
-	
-	for name,entity in pairs(game.entity_prototypes) do
-		if entity.type == "locomotive" or entity.type == "cargo-wagon" then
-			n_trains = n_trains + force.get_entity_count(name)
+
+	for entityType, mappedName in pairs(watched_names) do
+		local count = 0
+		for name,entity in pairs(game.entity_prototypes) do
+			if entity.type == entityType then
+				count = count + force.get_entity_count(name)
+			end
 		end
+		
+		log("[RT] " .. entityType .. "(To: " .. mappedName .. "/ Force: " .. force .. ") : ".. count)
+
+		if count then
+			local entities
+			entities = Surface.find_all_entities({
+				type = entityType,
+				force = force
+			})
+			
+			for _, entity in pairs(entities) do
+				table.insert(global[mappedName][force.name], entity)
+				log("[RT] added " .. entity.name)
+			end
+		end
+		
+		if count ~= #global[mappedName][force.name] then
+			log("[RT] number of found on map not equal to found entities")
+		end
+		
 	end
 	
-	log("[RT] Found "..n_trains.." trains for the "..force.name.."-force")
-
-	local x = 16
-	local y = 16
-	repeat
-		global.trains[force.name] = {}
-		for _,surface in pairs(game.surfaces) do
-			local locomotives = surface.find_entities_filtered{area = {{-x,-y},{x,y}}, force = force, type = "locomotive"}
-			for _,locomotive in pairs(locomotives) do
-				table.insert(global.trains[force.name],locomotive)
-			end
-			local cargo_wagons = surface.find_entities_filtered{area = {{-x,-y},{x,y}}, force = force, type = "cargo-wagon"}
-			for _,cargo_wagon in pairs(cargo_wagons) do
-				table.insert(global.trains[force.name],cargo_wagon)
-			end
-		end
-		log("[RT] Found "..#global.trains[force.name].." trains inside {"..-x..","..-y.."},{"..x..","..y.."}")
-		x = x +16
-		y = y +16
-	until #global.trains[force.name] >= n_trains
-
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -84,6 +101,12 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 					}
 				})
 				force.chart(event.radar.surface, Area.expand(area, expansion))
+				log('Train: ' .. index ..
+						' state: ' .. train.train.state ..
+						' speed: ' .. train.train.speed ..
+						' ori: ' .. train.orientation
+				)
+				log('Trainx: ' .. inspect(train.speed))
 			else
 				table.remove(global.trains[force.name], index)
 			end
