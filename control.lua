@@ -11,7 +11,7 @@ require 'config'
 expansion = scanned_area / 2
 initialized = false
 
-watched_names = {
+watched_names = { 
 	["train-stop"]  = "stops",
 	["cargo-wagon"] = "trains",
 	["locomotive"]  = "trains",
@@ -22,14 +22,16 @@ watched_names = {
 ---------------------------------------------------------------------------------------------------
 
 function init()
-	if not initialized then
-		log("[RT] ----------------- INIT --------------------------")
-		for entityType, mappedName in pairs(watched_names) do
-			for _,force in pairs(game.forces) do
-				log("[RT] ------ init mappedName " .. mappedName .. " force " .. force.name)
-				global[mappedName] = global[mappedName] or {}
-				init_force(force, entityType, mappedName)
-			end
+	if initialized then
+		return
+	end
+	
+	log("[RT] ----------------- INIT --------------------------")
+	for entityType, mappedName in pairs(watched_names) do
+		for _,force in pairs(game.forces) do
+			log("[RT] ------ init mappedName " .. mappedName .. " force " .. force.name)
+			global[mappedName] = global[mappedName] or {}
+			init_force(force, entityType, mappedName)
 		end
 	end
 	initialized = true
@@ -96,8 +98,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 	if event.radar.name == "train-tracker" then
 		local force = event.radar.force
 		for index,train in ipairs(global.trains[force.name]) do
-			if not train.valid then
-
+			if train.valid then
 				local area = Area.adjust({
 					{
 						train.position.x,
