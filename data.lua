@@ -11,5 +11,3 @@ log("[RT] energy_usage: " .. energy_usage ..
         " - energy_per_sector: " .. energy_per_sector)
 
 require("prototypes.radar-tracker")
-require("prototypes.trackers.trains")
-require("prototypes.trackers.vehicular")

@@ -15,7 +15,7 @@ Changes:
 Most of the fixes where to balance this mod more into really big maps.
 
 ## Not yet working additions
-Additionally I wanted to implement a way to track also other vehicles than trains and see their surrounding, if standing around. Therefore you can place the vehicular-tracker. But this is alpha-alpha yet. Not working, so do not use. :)
+I want to implement a way to track also other vehicles than trains and see their surrounding, if standing around. Therefore you can place the vehicular-tracker. But this is alpha-alpha yet. Not working, so do not use. :)
 
 #Background
 This mod is is formerly known as **Rail-Tracker** by MrDoomah.
@@ -38,9 +38,31 @@ And suddenly it was as it was. Then I though: Would be a pity not to publish it.
 
 #Ideas
 
-- Replace force name with force index?
-- Currently every entity of a train (wagons and locos) will scan forward. Even if the train is not moving. Instead the train should use only the locomotives to scan, while driving (fast scan rate) and when stopped only front and back loco is scanned every 10 seconds.
-- Tracker can scan only trains in range (I think to 2500 tiles radius, which is quite big). This needs to introduce to bind trains to trackers.
+Currently every entity of a train (wagons and locos) will scan forward in the driving direction. Even if the train is not moving. That is for every part of a train one scan.
+
+Instead the train should use only the locomotives to scan, while driving (only one scan).
+When stopped only front and back loco is scanned every 10 (?) seconds.
+When stopped on a train-stop only the back needs to be scanned.
+
+For this I need to have different lists:
+
+global.trains -> needed only one times after startup.
+For each train it generates an event on_train_changed_state. Which brings it into a new list:
+
+Depending on state the current front loco is added to
+
+RunningTrains
+StandingTrains
+
+Depending on that the trains are scanned by different radars in different intervalls with different methods.
+
+
+
+### more Ideas
+- Stationary and mobile tracker instead of tracker for each entity. Stationary will scan only non-moving entities. Mobile vice versa.
+- Cars: Scan large area in front of car if moving, scan only every 10 secs and small area if standing.
+- Train-stops: Scan only every 10 (?) secs.
+- Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). This needs to introduce to bind trains to trackers.
 - The more trains a tracker needs to scan then, the slower it will refresh.
 - Research each tracker-type on it's own (bring back research for train-tracker after rail-tech).
 - A little bit better estimation of the path the train will drive to scan the ground before the entity it reaches and re-scan of missed out chunks in an most effective way.
