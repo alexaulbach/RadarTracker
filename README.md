@@ -27,13 +27,23 @@ And suddenly it was as it was. Then I though: Would be a pity not to publish it.
 
 
 #Version history
+0.1.3 2016-09-30 
+- Introduced tracker types. Types are: trains (locos or wagons), stops (all train stops), cars (cars, tanks, satellite-uplink...); currently still only trains works.
+- Rewrote initialization. on a very large map (8 GiB) with >300 trains initialisation takes only 20 seconds vs. hours from before.
+- Avoid double reinitialization.
+- Re-increased scan rate cause I want to reduce average number of scans per train. Also looks much better.
 
-0.1.2 2016-09-04 Initial version
+0.1.2 2016-09-04
+- Initial version
 
 #Ideas
 
+- Replace force name with force index?
+- Currently every entity of a train (wagons and locos) will scan forward. Even if the train is not moving. Instead the train should use only the locomotives to scan, while driving (fast scan rate) and when stopped only front and back loco is scanned every 10 seconds.
+- Tracker can scan only trains in range (I think to 2500 tiles radius, which is quite big). This needs to introduce to bind trains to trackers.
+- The more trains a tracker needs to scan then, the slower it will refresh.
 - Research each tracker-type on it's own (bring back research for train-tracker after rail-tech).
-- A better estimation of the path the train will drive to scan the ground before the entity it reaches and re-scan of missed out chunks in an most effective way.
+- A little bit better estimation of the path the train will drive to scan the ground before the entity it reaches and re-scan of missed out chunks in an most effective way.
 - Same for other vehicles. Trains can scan forward, but other vehicles have no Lua-interface for speed etc. 
 - Better integration into FatController: The initial scan for the trains and train-management is made much more clever there.
 - Simple list of vehicles other than trains, a bit of The Fat Controller for cars/tanks/other vehicle, but perhaps this should be done in another mod then.
@@ -41,3 +51,4 @@ And suddenly it was as it was. Then I though: Would be a pity not to publish it.
 - Upgrade function to convert the train-tracker radar to to radar-tracker (good learning subproject).
 - "Train Radar"  - some special type of locomotive/wagon. The train can be programmed to drive in circles to scan the area beside your rails in regular intervals, but needs excessive amounts of energy.
 - Add similar functionality to scan-robots. You can send them out and they will automatically reveal map.
+- Add a new radar-functionality, which scans 360˚ in a minute, but only those chunks, that have entities built on ground. Range depends only on power it can get.

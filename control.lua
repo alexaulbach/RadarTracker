@@ -7,88 +7,39 @@ inspect = require('inspect')
 
 
 require 'config'
+require 'init'
 
 expansion = scanned_area / 2
-initialized = false
 
-watched_names = { 
+trackerTypes = { 
 	["train-stop"]  = "stops",
 	["cargo-wagon"] = "trains",
 	["locomotive"]  = "trains",
 	["car"]         = "cars",
 }
 
-
----------------------------------------------------------------------------------------------------
-
-function init()
-	if initialized then
-		return
-	end
-	
-	log("[RT] ----------------- INIT --------------------------")
-	for entityType, mappedName in pairs(watched_names) do
-		for _,force in pairs(game.forces) do
-			log("[RT] ------ init mappedName " .. mappedName .. " force " .. force.name)
-			global[mappedName] = global[mappedName] or {}
-			init_force(force, entityType, mappedName)
-		end
-	end
-	initialized = true
-end
-
----------------------------------------------------------------------------------------------------
-
-function init_force(force, entityType, mappedName)
-
-	local count = 0
-	for name,entity in pairs(game.entity_prototypes) do
-		if entity.type == entityType then
-			count = count + force.get_entity_count(name)
-		end
-	end
-
-	global[mappedName][force.name] = {}
-
-	log("[RT] COUNT " .. entityType .. " (To: " .. mappedName .. " / Force: " .. force.name .. ") : ".. count)
-
-	if count then
-		local entities
-		entities = Surface.find_all_entities({
-			type = entityType,
-			force = force
-		})
-		
-		for _, entity in pairs(entities) do
-			table.insert(global[mappedName][force.name], entity)
-			log("[RT] added: " .. entity.name .. " /force " .. force.name .. " to " .. mappedName)
-		end
-	end
-	
-	if count ~= #global[mappedName][force.name] then
-		log("[RT] number of found on map not equal to found entities: " .. #global[mappedName][force.name])
-	end
-
-end
-
 ---------------------------------------------------------------------------------------------------
 
 script.on_init(function()
-	log("[RT] ----------------- ON-INIT--------------------------")
-	init()
+	log("[RT] ----------------- on_init--------------------------")
+	Init.init()
 end)
 
 script.on_configuration_changed(function(event)
 	log("[RT] ----------------- on_configuration_changed--------------------------")
-	init()
+	Init.init()
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-	init_force(event.force)
+	log("[RT] ----------------- on_force_created--------------------------")
+	Init.clearInitialization()
+	Init.init()
 end)
 
 script.on_event(defines.events.on_built_entity, function(event)
 	local entity = event.created_entity
+
+	-- TODO complete rewrite
 	if entity.type == "locomotive" or entity.type == "cargo-wagon" then
 		table.insert(global.trains[entity.force.name], entity)
 	end
@@ -126,11 +77,32 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 				local x1 = vehcl.position.x
 				local y1 = vehcl.position.y
 
-				local scalf = scanned_area / 2
-				force.chart(event.radar.surface,{{x1-scalf, y1-scalf}, {x1+scalf, y1+scalf}})
+				force.chart(event.radar.surface,{{x1-expansion, y1-expansion}, {x1+expansion, y1+expansion}})
 			else
 				table.remove(global.trains[force.name], index)
 			end
 		end
 	end
 end)
+
+script.on_event(defines.events.on_train_changed_state, function(event)
+	local train = event.train
+	local force = train.carriages[1].force
+	log("[RT] train changed state:"..train.state)
+	local indexes = find_trains_of_event(force, train)
+	log("[RT] Found train, indexes " .. inspect(indexes) )
+end)
+
+
+--- Get traininfo by LuaTrain
+-- @return #TrainInfo
+function find_trains_of_event(force, event_train)
+	local found_indexes = {}
+	local trains = global.trains[force.name]
+	for i, entity in pairs(trains) do
+		if entity.valid and entity.train == event_train then
+			table.insert(found_indexes, i)
+		end
+	end
+	return found_indexes
+end
