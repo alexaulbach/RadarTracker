@@ -1,12 +1,12 @@
 --- Init module
 -- @module Init
 
-initialized = false
-inited = {}
 Init = {}
+Init.initialized = false
+Init.inited = {}
 
 Init.init = function()
-    if initialized then
+    if Init.initialized then
         log("[RT] already initialized")
         return
     end
@@ -15,7 +15,7 @@ Init.init = function()
     for entityType, mappedName in pairs(trackerTypes) do
         Init.type(entityType, mappedName)
     end
-    initialized = true
+    Init.initialized = true
 end
 
 Init.type = function(entityType, mappedName)
@@ -51,19 +51,19 @@ Init.countEntities = function(entityType)
 end
 
 Init.ifNeeded = function(mappedName, force_name)
-    if not inited[mappedName] then
+    if not Init.inited[mappedName] then
         global[mappedName] = {}
-        inited[mappedName] = mappedName
+        Init.inited[mappedName] = mappedName
     end
 
     local index = mappedName .. "." .. force_name
-    if not inited[index] then
+    if not Init.inited[index] then
         global[mappedName][force_name] = {}
-        inited[index] = index
+        Init.inited[index] = index
     end
 end
 
 Init.clearInitialization = function()
-    initialized = false
-    inited = {}
+    Init.initialized = false
+    Init.inited = {}
 end
