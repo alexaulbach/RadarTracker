@@ -11,7 +11,7 @@ require 'init'
 
 expansion = scanned_area / 2
 
-trackerTypes = { 
+entityTypesToManagerType = { 
 	["train-stop"]  = "stops",
 	["cargo-wagon"] = "trains",
 	["locomotive"]  = "trains",

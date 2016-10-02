@@ -12,7 +12,7 @@ Init.init = function()
     end
 
     log("[RT] ----------------- INIT --------------------------")
-    for entityType, mappedName in pairs(trackerTypes) do
+    for entityType, mappedName in pairs(entityTypesToManagerType) do
         Init.type(entityType, mappedName)
     end
     Init.initialized = true
