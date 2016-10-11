@@ -8,15 +8,33 @@ inspect = require('inspect')
 
 require 'config'
 require 'init'
+require 'manager'
+
 
 expansion = scanned_area / 2
 
-entityTypesToManagerType = { 
-	["train-stop"]  = "stops",
-	["cargo-wagon"] = "trains",
-	["locomotive"]  = "trains",
-	["car"]         = "cars",
+
+
+RTDEF = {
+	tracker = {
+		running = 1,
+		unmoved = 2,
+		fixed   = 3,
+		once    = 4,
+		random  = 5,
+	},
+	managers = {
+		["train-stop"]  = "stops",
+		["cargo-wagon"] = "trains",
+		["locomotive"]  = "trains",
+		["car"]         = "cars",
+	}
 }
+
+RTDEF.tracker.running = 1
+
+log("RTDEF " .. inspect(RTDEF))
+
 
 ---------------------------------------------------------------------------------------------------
 
@@ -48,7 +66,7 @@ end)
 script.on_event(defines.events.on_sector_scanned, function(event)
 	if event.radar.name == "train-tracker" then
 		local force = event.radar.force
-		for index,train in ipairs(global.trains[force.name]) do
+		for index,train in ipairs(global.tracker[force.name][RTDEF.tracker.running]) do
 			if train.valid then
 				local area = Area.adjust({
 					{
@@ -66,7 +84,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 						' ori: ' .. train.orientation
 				)
 			else
-				table.remove(global.trains[force.name], index)
+				table.remove(global.tracker[force.name][RTDEF.tracker.running], index)
 			end
 		end
 	elseif event.radar.name == "vehicluar-tracker" then
@@ -87,22 +105,19 @@ end)
 
 script.on_event(defines.events.on_train_changed_state, function(event)
 	local train = event.train
+	local unit_number = train.locomotives.front_movers[1].unit_number
 	local force = train.carriages[1].force
-	log("[RT] train changed state:"..train.state)
-	local indexes = find_trains_of_event(force, train)
-	log("[RT] Found train, indexes " .. inspect(indexes) )
-end)
-
-
---- Get traininfo by LuaTrain
--- @return #TrainInfo
-function find_trains_of_event(force, event_train)
-	local found_indexes = {}
-	local trains = global.trains[force.name]
-	for i, entity in pairs(trains) do
-		if entity.valid and entity.train == event_train then
-			table.insert(found_indexes, i)
+	log("[RT] train unit " .. unit_number .. " changed state:" ..train.state)
+	if global.watchlist[force.name][unit_number] then
+		log("[RT] Exists: " .. unit_number .. " force " .. force.name)
+		local found_entity = global.watchlist[force.name][unit_number]
+		if found_entity.entity.valid then
+			log("[RT] Valid: " .. found_entity.manager .. found_entity.tracker )
+			return unit_number
 		end
+		--- TODO: Trigger garbage-collection
+		return nil
 	end
-	return found_indexes
-end
+	--- TODO: If not found then we need to add it
+	Manager.add(RTDEF.manager.locomotive, entity, entity.force)
+end)

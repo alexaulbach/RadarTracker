@@ -3,7 +3,6 @@
 
 Init = {}
 Init.initialized = false
-Init.inited = {}
 
 Init.init = function()
     if Init.initialized then
@@ -12,10 +11,24 @@ Init.init = function()
     end
 
     log("[RT] ----------------- INIT --------------------------")
-    for entityType, mappedName in pairs(entityTypesToManagerType) do
+    global.watchlist = {}
+    global.tracker   = {}
+    for _,force in pairs(game.forces) do
+        local fname = force.name
+        global.watchlist[fname] = {}
+        global.tracker[fname] = {}
+        for _, trackername in pairs(RTDEF.tracker) do
+            global.tracker[fname][trackername] = {}
+        end
+    end
+        
+    for entityType, mappedName in pairs(RTDEF.managers) do
         Init.type(entityType, mappedName)
     end
+    
     Init.initialized = true
+    log("[RT] GLOBAL WATCLIST" .. inspect(global.watchlist))
+    log("[RT] GLOBAL TRACKER" .. inspect(global.tracker))
 end
 
 Init.type = function(entityType, mappedName)
@@ -32,8 +45,8 @@ Init.type = function(entityType, mappedName)
 
     for _, entity in pairs(entities) do
         local force_name = entity.force.name
-        Init.ifNeeded(mappedName, force_name)
-        table.insert(global[mappedName][force_name], entity)
+--        Init.ifNeeded(mappedName, force_name)
+        Manager.add(mappedName, entity, entity.force) 
         log("[RT] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
     end
 end
@@ -50,20 +63,6 @@ Init.countEntities = function(entityType)
     return count
 end
 
-Init.ifNeeded = function(mappedName, force_name)
-    if not Init.inited[mappedName] then
-        global[mappedName] = {}
-        Init.inited[mappedName] = mappedName
-    end
-
-    local index = mappedName .. "." .. force_name
-    if not Init.inited[index] then
-        global[mappedName][force_name] = {}
-        Init.inited[index] = index
-    end
-end
-
 Init.clearInitialization = function()
     Init.initialized = false
-    Init.inited = {}
 end
