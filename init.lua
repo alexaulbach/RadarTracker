@@ -3,6 +3,8 @@
 
 Init = {}
 Init.initialized = false
+Init.initializedData = false
+Init.in_load = false
 
 Init.init = function()
     if Init.initialized then
@@ -11,24 +13,13 @@ Init.init = function()
     end
 
     log("[RT] ----------------- INIT --------------------------")
-    global.watchlist = {}
-    global.tracker   = {}
-    for _,force in pairs(game.forces) do
-        local fname = force.name
-        global.watchlist[fname] = {}
-        global.tracker[fname] = {}
-        for _, trackername in pairs(RTDEF.tracker) do
-            global.tracker[fname][trackername] = {}
-        end
-    end
-        
+    Init.initData()
+    
     for entityType, mappedName in pairs(RTDEF.managers) do
         Init.type(entityType, mappedName)
     end
     
     Init.initialized = true
-    log("[RT] GLOBAL WATCLIST" .. inspect(global.watchlist))
-    log("[RT] GLOBAL TRACKER" .. inspect(global.tracker))
 end
 
 Init.type = function(entityType, mappedName)
@@ -45,8 +36,7 @@ Init.type = function(entityType, mappedName)
 
     for _, entity in pairs(entities) do
         local force_name = entity.force.name
---        Init.ifNeeded(mappedName, force_name)
-        Manager.add(mappedName, entity, entity.force) 
+        Manager.add(mappedName, entity) 
         log("[RT] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
     end
 end
@@ -65,4 +55,20 @@ end
 
 Init.clearInitialization = function()
     Init.initialized = false
+    Init.initializedData = false
+    Init.on_load = false
+end
+
+Init.initData = function()
+    if Init.initializedData then
+        return
+    end
+    
+    if not Init.on_load then
+        log("[RT] initData")
+        container.init()
+        Init.initializedData = true
+    else
+        log("[RT] Not initData cause in on_load")
+    end
 end

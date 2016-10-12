@@ -5,15 +5,12 @@ require 'stdlib.surface'
 -- debug-purposes
 inspect = require('inspect')
 
-
 require 'config'
 require 'init'
+require 'container'
 require 'manager'
 
-
 expansion = scanned_area / 2
-
-
 
 RTDEF = {
 	tracker = {
@@ -31,12 +28,11 @@ RTDEF = {
 	}
 }
 
-RTDEF.tracker.running = 1
-
-log("RTDEF " .. inspect(RTDEF))
-
-
 ---------------------------------------------------------------------------------------------------
+
+script.on_load(function()
+	log("[RT] ----------------- on_load: do nothing--------------------------")
+end)
 
 script.on_init(function()
 	log("[RT] ----------------- on_init--------------------------")
@@ -59,14 +55,16 @@ script.on_event(defines.events.on_built_entity, function(event)
 
 	-- TODO complete rewrite
 	if entity.type == "locomotive" or entity.type == "cargo-wagon" then
-		table.insert(global.trains[entity.force.name], entity)
+---		table.insert(global.trains[entity.force.name], entity)
 	end
 end)
 
+eventcount = 0
 script.on_event(defines.events.on_sector_scanned, function(event)
 	if event.radar.name == "train-tracker" then
 		local force = event.radar.force
-		for index,train in ipairs(global.tracker[force.name][RTDEF.tracker.running]) do
+		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.running, force.name)) do
+			local train = ntt.entity
 			if train.valid then
 				local area = Area.adjust({
 					{
@@ -78,13 +76,15 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 					}
 				})
 				force.chart(event.radar.surface, Area.expand(area, expansion))
-				log('Train: ' .. index ..
-						' state: ' .. train.train.state ..
-						' speed: ' .. train.train.speed ..
-						' ori: ' .. train.orientation
-				)
+				eventcount = eventcount + 1
+				if eventcount % 10 == 0 then
+					log('[RT] Train: ' .. unit_number ..
+							' state: ' .. train.train.state ..
+							' cnt: ' .. eventcount
+					)
+				end
 			else
-				table.remove(global.tracker[force.name][RTDEF.tracker.running], index)
+				container.remove(unit_number)
 			end
 		end
 	elseif event.radar.name == "vehicluar-tracker" then
@@ -106,18 +106,15 @@ end)
 script.on_event(defines.events.on_train_changed_state, function(event)
 	local train = event.train
 	local unit_number = train.locomotives.front_movers[1].unit_number
-	local force = train.carriages[1].force
-	log("[RT] train unit " .. unit_number .. " changed state:" ..train.state)
-	if global.watchlist[force.name][unit_number] then
-		log("[RT] Exists: " .. unit_number .. " force " .. force.name)
-		local found_entity = global.watchlist[force.name][unit_number]
-		if found_entity.entity.valid then
-			log("[RT] Valid: " .. found_entity.manager .. found_entity.tracker )
-			return unit_number
-		end
+	log("[RT] >>>>>>> train unit " .. unit_number .. " changed state:" ..train.state)
+	local ntt = container.get(unit_number)
+	if ntt then
+		log("[RT] Exists: " .. unit_number .. " force " .. ntt.entity.force.name)
+		log("[RT] Current ntttrkr: " .. inspect(global._ntttrkr))
+		return unit_number
 		--- TODO: Trigger garbage-collection
-		return nil
 	end
 	--- TODO: If not found then we need to add it
-	Manager.add(RTDEF.manager.locomotive, entity, entity.force)
+	Manager.add(RTDEF.managers.locomotive, Manager.trains.frontLocoEntity(train))
+	log("[RT] Current ntttrkr: " .. inspect(global._ntttrkr))
 end)

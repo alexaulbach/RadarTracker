@@ -4,7 +4,7 @@
 
 --- Entity Info
 -- @type Entity Info
-EntityInfo = {
+nttInfo = {
     manager = "", -- managers
     tracker = "", -- tracker-type: running, unmoved, fixed, once, random
     entity = false, -- ref to entity
@@ -14,9 +14,9 @@ EntityInfo = {
 -- @type Manager
 Manager = {}
 
-Manager.add = function(type, entity, force)
+Manager.add = function(type, entity)
     if entity.valid then
-        Manager[type].add(entity, force)
+        Manager[type].add(entity)
         return true
     end
     return false
@@ -28,15 +28,12 @@ end
 
 Manager.trains = {}
 
-Manager.trains.add = function(entity, force)
-    local eInfo = table.deepcopy(EntityInfo)
-    eInfo.manager = "train"
-    eInfo.tracker = Manager.trains.getTracker(entity.train)
-    eInfo.entity  = Manager.trains.getFrontLoco(entity)
-    local unit_number = entity.unit_number
-    log("[RT] Add unit_number " .. unit_number .. " Force " .. force.name .. " tracker " .. eInfo.tracker .. " manager " .. eInfo.manager)
-    global.watchlist[force.name][unit_number] = eInfo
-    global.tracker[force.name][eInfo.tracker][unit_number] = eInfo
+Manager.trains.add = function(entity)
+    local ntt = table.deepcopy(nttInfo)
+    ntt.manager = "train"
+    ntt.tracker = Manager.trains.getTracker(entity.train)
+    ntt.entity  = Manager.trains.getFrontLoco(entity)
+    container.set(ntt)
 end
 
 Manager.trains.getFrontLoco = function(entity)
@@ -47,22 +44,28 @@ end
 -- @param LuaTrain train
 -- @return LuaEntity the main locomotive
 Manager.trains.frontLocoEntity = function(train)
-    if train.valid and
-            train.locomotives and
-            (#train.locomotives.front_movers > 0 or #train.locomotives.back_movers > 0)
+    if train.valid
+      and train.locomotives
+      and (#train.locomotives.front_movers > 0 or #train.locomotives.back_movers > 0)
     then
         return train.locomotives.front_movers and train.locomotives.front_movers[1] or train.locomotives.back_movers[1]
     end
 end
 
 Manager.trains.getTracker = function(train)
-    local state = train.state
-
-    if state == defines.train_state.on_the_path and train.schedule and #train.schedule.records < 2 then
-        return RTDEF.tracker.unmoved
-    end
-
+    local state = Manager.trains.getTrueState(train)
+    log("[RT] state " .. Manager.trains.statePrint(state))
     return Manager.trains.stateComp(state)
+end
+
+Manager.trains.getTrueState = function(train)
+    local state = train.state
+    -- Bug: State 9 is always triggered on manual control
+    -- see https://forums.factorio.com/viewtopic.php?f=7&t=34237
+    if state == defines.train_state.manual_control and train.speed == 0 then
+        return defines.train_state.manual_control_stop
+    end
+    return state
 end
 
 Manager.trains.stateComp = function(state)
@@ -86,6 +89,27 @@ Manager.trains.stateComp = function(state)
         end
     end
     return nil
+end
+
+Manager.trains.statePrint = function(state)
+    if state == nil then
+        log("[RT] state 0")
+        return "zero!"
+    end
+    local statconf = {
+        'on_the_path	Normal state -- following the path.5',
+        'path_lost	Had path and lost it -- must stop.',
+        'no_schedule	Doesn\'t have anywhere to go.',
+        'no_path	Has no path and is stopped.',
+        'arrive_signal	Braking before a rail signal.',
+        'wait_signal	Waiting at a signal.',
+        'arrive_station	Braking before a station.',
+        'wait_station	Waiting at a station.',
+        'manual_control_stop	Switched to manual control and has to stop.',
+        'manual_control	Can move if user explicitly sits in and rides the train.',
+        'stop_for_auto_control	Train was switched to auto control but it is moving and needs to be stopped.'
+    }
+    return tostring(state) .. " : " .. statconf[state+1]
 end
 
 --------------------------------------------------------------------
