@@ -1,8 +1,9 @@
 # RadarTracker
-This is a Factorio mod. It adds a new radar called "train-tracker". If you place that trains will track their path as if they have built in a small internal radar.
+This is a Factorio mod. It adds a new types of radars:
+- Mobile tracker: Scans every half seconds any running device and tries to look forward.
 
-You need to research radar-tracker technology and place a train-tracker anywhere and the trains scans the area around them.
-
+You need to research the different radar-tracker-technologies and place the radars.
+ 
 #Changes to the original train-tracker:
 This is originally a mod called "train-tracker". See below for "Background".
 
@@ -25,8 +26,7 @@ It was updated to v0.13 by Optera (in the same thread).
 To be honest, the biggest reason why I did this was, that I had overseen, that Optera did a 0.13 fix, so I fixed it too for myself (cause I needed it for playing on my really big map). I think I wouldn't have it, if I read the whole thread. But when I was on it I fixed here a bit and there a bit and I had some more ideas (The second reason was learning more Lua programming and Factorio mods of course).
 And suddenly it was as it was. Then I though: Would be a pity not to publish it. Forgive me, it's my first mod. :)
 
-
-#Version history
+##Version history
 0.1.3 2016-09-30 
 - Introduced tracker types. Types are: trains (locos or wagons), stops (all train stops), cars (cars, tanks, satellite-uplink...); currently still only trains works.
 - Rewrote initialization. on a very large map (8 GiB) with >300 trains initialisation takes only 20 seconds vs. hours from before.
@@ -36,8 +36,10 @@ And suddenly it was as it was. Then I though: Would be a pity not to publish it.
 0.1.2 2016-09-04
 - Initial version
 
-#Ideas
+##Git Hub
+https://github.com/alexaulbach/RadarTracker
 
+##Ideas
 Currently every entity of a train (wagons and locos) will scan forward in the driving direction. Even if the train is not moving. That is for every part of a train one scan.
 
 Instead the train should use only the locomotives to scan, while driving (only one scan).
@@ -56,12 +58,13 @@ StandingTrains
 
 Depending on that the trains are scanned by different radars in different intervalls with different methods.
 
-
-
 ### more Ideas
-- Stationary and mobile tracker instead of tracker for each entity. Stationary will scan only non-moving entities. Mobile vice versa.
+- Static tracker: This scans every 30 seconds all vehicles, that are not moving, including trains.
+- Immovable property: This radar scans once in a minute like real radar:
+ It rotates with small degrees per second and scans chunks up to a distance of 2500 tiles,
+ that have some buildings of your property on it. This takes a lot of energy, depending on the distance!
 - Cars: Scan large area in front of car if moving, scan only every 10 secs and small area if standing.
-- Train-stops: Scan only every 10 (?) secs.
+- Train-stops: Scan only every 30 (?) secs.
 - Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). This needs to introduce to bind trains to trackers.
 - The more trains a tracker needs to scan then, the slower it will refresh.
 - Research each tracker-type on it's own (bring back research for train-tracker after rail-tech).

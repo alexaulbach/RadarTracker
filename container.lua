@@ -11,7 +11,6 @@ container.set = function(ntt)
         end
         log("[RT] Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
         global._ntt[unit_number] = ntt
-        global._ntt4rc[fn][unit_number] = ntt
         global._ntttrkr[fn][ntt.tracker][unit_number] = ntt
     else
         log("[RT] ERROR invalid unit_number: " .. unit_number)
@@ -40,11 +39,9 @@ end
 
 container.remove = function(unit_number)
     local ntt = global._ntt[unit_number]
-    -- log("[RT] <<<<<<<<< container remove " .. unit_number .. " -- " .. ntt.tracker)
     if ntt then
         local fn = ntt.entity.force.name
         global._ntttrkr[fn][ntt.tracker][unit_number] = nil
-        global._ntt4rc[fn][unit_number] = nil
         global._ntt[unit_number] = nil
     end
 end

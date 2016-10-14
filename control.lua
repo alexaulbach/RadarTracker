@@ -10,15 +10,14 @@ require 'init'
 require 'container'
 require 'manager'
 
-expansion = scanned_area / 2
-
 RTDEF = {
 	tracker = {
-		running = 1,
-		unmoved = 2,
-		fixed   = 3,
-		once    = 4,
-		random  = 5,
+		none    = 1,    -- no scan
+		running = 2,    -- vehicles with speed ~= 0
+		unmoved = 3,    -- vehicles with speed == 0
+		rotating= 4,    -- chunks that should be scanned rotational
+		once    = 5,    -- scanning once like some kind of rocket
+		random  = 6,    -- scanning randomly, like construction bots?
 	},
 	managers = {
 		["train-stop"]  = "stops",
@@ -52,16 +51,33 @@ end)
 
 script.on_event(defines.events.on_built_entity, function(event)
 	local entity = event.created_entity
-
-	-- TODO complete rewrite
-	if entity.type == "locomotive" or entity.type == "cargo-wagon" then
----		table.insert(global.trains[entity.force.name], entity)
+	local mngr = RTDEF.managers[entity.type]
+	if mngr then
+		log("[RT] built entity: " .. entity.unit_number .. " manager " .. mngr)
+		manager.add(mngr, entity)
 	end
 end)
 
+--[[
+/c game.player.print("FRONT STOCK" .. game.player.selected.train.front_stock.unit_number);
+game.player.print("BACK STOCK" ..game.player.selected.train.back_stock.unit_number);
+for i, loco in pairs(game.player.selected.train.locomotives.front_movers) do
+	game.player.print("Front Mover " .. i .. " . " .. loco.unit_number)
+end
+for i, loco in pairs(game.player.selected.train.locomotives.back_movers) do
+	game.player.print("Back Mover " .. i .. " . " .. loco.unit_number)
+end
+for i, carr in pairs(game.player.selected.train.carriages) do
+	game.player.print("Carr " .. i .. " . " .. carr.unit_number)
+end
+
+]]
+	
+
 eventcount = 0
 script.on_event(defines.events.on_sector_scanned, function(event)
-	if event.radar.name == "train-tracker" then
+	log("[RT] TRACKER" .. event.radar.name)
+	if event.radar.name == "movement-tracker" then
 		local force = event.radar.force
 		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.running, force.name)) do
 			local train = ntt.entity
@@ -71,11 +87,11 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 						train.position.x,
 						train.position.y
 					}, {
-						train.position.x + train.train.speed * precognition * math.sin(2*math.pi * train.orientation),
-						train.position.y - train.train.speed * precognition * math.cos(2*math.pi * train.orientation)
+						train.position.x + train.train.speed * _config["movement-tracker"].precognition * math.sin(2*math.pi * train.orientation),
+						train.position.y - train.train.speed * _config["movement-tracker"].precognition * math.cos(2*math.pi * train.orientation)
 					}
 				})
-				force.chart(event.radar.surface, Area.expand(area, expansion))
+				force.chart(event.radar.surface, Area.expand(area, _config["movement-tracker"].scanned_radius))
 				eventcount = eventcount + 1
 				if eventcount % 10 == 0 then
 					log('[RT] Train: ' .. unit_number ..
@@ -112,9 +128,9 @@ script.on_event(defines.events.on_train_changed_state, function(event)
 		log("[RT] Exists: " .. unit_number .. " force " .. ntt.entity.force.name)
 		log("[RT] Current ntttrkr: " .. inspect(global._ntttrkr))
 		return unit_number
-		--- TODO: Trigger garbage-collection
+		--- TODO: Trigger garbage-collection?
 	end
 	--- TODO: If not found then we need to add it
-	Manager.add(RTDEF.managers.locomotive, Manager.trains.frontLocoEntity(train))
+	manager.add(RTDEF.managers.locomotive, train.front_stock)
 	log("[RT] Current ntttrkr: " .. inspect(global._ntttrkr))
 end)

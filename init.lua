@@ -36,7 +36,7 @@ Init.type = function(entityType, mappedName)
 
     for _, entity in pairs(entities) do
         local force_name = entity.force.name
-        Manager.add(mappedName, entity) 
+        manager.add(mappedName, entity) 
         log("[RT] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
     end
 end

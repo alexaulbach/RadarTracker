@@ -1,35 +1,15 @@
-require("prototypes.trackers.trains")
-require("prototypes.trackers.vehicular")
 
-data:extend({
-	{
-    type = "technology",
-    name = "radar-tracker",
-    icon = "__"..mod_name.."__/graphics/train-tracker-technology.png",
-	icon_size = 128,
-    prerequisites = {"electric-energy-distribution-1"},
-	effects =
-	{
-		{
-			type = "unlock-recipe",
-			recipe = "train-tracker"
-		},
-		{
-			type = "unlock-recipe",
-			recipe = "vehicular-tracker"
-		}
-	},
-	unit =
-	{
-		count = 100,
-		ingredients =
-		{
-			{"science-pack-1", 2},
-			{"science-pack-2", 1}
-		},
-		time = 20
-	},
-    order = "c-g-c",
-	}
-})
+-- load all prototypes
 
+tracker_name = ""
+_c = {}
+for tracker_name, _c in pairs(_config) do
+	
+	log("XXXX " .. tracker_name)
+	for name,val in pairs(_c) do
+		log("XXXXX" .. name .. " " .. val)
+	end
+	
+	require("prototypes.trackers." .. tracker_name)
+	
+end
