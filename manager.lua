@@ -32,7 +32,7 @@ manager.trains = {}
 --- if back_stock ~= front_stock add also that
 manager.trains.add = function(entity)
     local frontntt = table.deepcopy(nttInfo)
-    frontntt.manager = "train"
+    frontntt.manager = "trains"
     frontntt.tracker = manager.trains.getTracker(entity.train)
     frontntt.entity  = entity.train.front_stock
     container.set(frontntt)
@@ -56,7 +56,13 @@ end
 --------------------------------------------------------------------
 
 manager.stops = {}
+
 manager.stops.add = function(entity, force)
+    local ntt = table.deepcopy(nttInfo)
+    ntt.manager = "stops"
+    ntt.tracker = RTDEF.tracker.unmoved
+    ntt.entity  = entity
+    container.set(ntt)
 end
 
 --------------------------------------------------------------------
@@ -64,6 +70,19 @@ end
 --------------------------------------------------------------------
 
 manager.cars = {}
+
 manager.cars.add = function(entity, force)
+    local ntt = table.deepcopy(nttInfo)
+    ntt.manager = "cars"
+    ntt.tracker = RTDEF.tracker.unmoved
+    ntt.entity  = entity
+    container.set(ntt)
 end
 
+manager.cars.getTracker = function(entity)
+    if entity.speed ~= 0.0 then
+        return RTDEF.tracker.running
+    else
+        return RTDEF.tracker.unmoved
+    end
+end

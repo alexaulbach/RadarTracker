@@ -13,10 +13,10 @@ require 'manager'
 RTDEF = {
 	tracker = {
 		none    = 1,    -- no scan
-		running = 2,    -- vehicles with speed ~= 0
-		unmoved = 3,    -- vehicles with speed == 0
-		rotating= 4,    -- chunks that should be scanned rotational
-		once    = 5,    -- scanning once like some kind of rocket
+		running = 2,    -- movement-tracker   ; vehicles with speed ~= 0
+		unmoved = 3,    -- immoveable-tracker ; vehicles with speed == 0
+		rotating= 4,    -- rotational-tracker ; chunks that should be scanned rotational
+		once    = 5,    -- scanning once like some kind of rocket or when a robot places/removes an entity
 		random  = 6,    -- scanning randomly, like construction bots?
 	},
 	managers = {
@@ -77,25 +77,25 @@ end
 eventcount = 0
 script.on_event(defines.events.on_sector_scanned, function(event)
 	log("[RT] TRACKER" .. event.radar.name)
-	if event.radar.name == "movement-tracker" then
-		local force = event.radar.force
-		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.running, force.name)) do
-			local train = ntt.entity
-			if train.valid then
+	local radar = event.radar
+	if radar.name == "movement-tracker" then
+		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.running, radar.force.name)) do
+			local ent = ntt.entity
+			if ent.valid then
 				local area = Area.adjust({
 					{
-						train.position.x,
-						train.position.y
+						ent.position.x,
+						ent.position.y
 					}, {
-						train.position.x + train.train.speed * _config["movement-tracker"].precognition * math.sin(2*math.pi * train.orientation),
-						train.position.y - train.train.speed * _config["movement-tracker"].precognition * math.cos(2*math.pi * train.orientation)
+						ent.position.x + ent.train.speed * _config["movement-tracker"].precognition * math.sin(2*math.pi * ent.orientation),
+						ent.position.y - ent.train.speed * _config["movement-tracker"].precognition * math.cos(2*math.pi * ent.orientation)
 					}
 				})
-				force.chart(event.radar.surface, Area.expand(area, _config["movement-tracker"].scanned_radius))
+				radar.force.chart(radar.surface, Area.expand(area, _config["movement-tracker"].scanned_radius))
 				eventcount = eventcount + 1
 				if eventcount % 10 == 0 then
 					log('[RT] Train: ' .. unit_number ..
-							' state: ' .. train.train.state ..
+							' state: ' .. ent.train.state ..
 							' cnt: ' .. eventcount
 					)
 				end
@@ -103,21 +103,26 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 				container.remove(unit_number)
 			end
 		end
-	elseif event.radar.name == "vehicluar-tracker" then
-		local force = event.radar.force
-		for index,vehcl in ipairs(global.trains[force.name]) do
-			if vehcl.valid then
+	elseif radar.name == "immoveables-tracker" then
+		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.unmoved, radar.force.name)) do
+			local ent = ntt.entity
+			if ent.valid then
 
-				local x1 = vehcl.position.x
-				local y1 = vehcl.position.y
+				local x1 = ent.position.x
+				local y1 = ent.position.y
+				radar.force.chart(radar.surface, Area.expand({{x1, y1}, {x1, y1}}, _config["immoveables-tracker"].scanned_radius))
 
-				force.chart(event.radar.surface,{{x1-expansion, y1-expansion}, {x1+expansion, y1+expansion}})
 			else
-				table.remove(global.trains[force.name], index)
+				container.remove(unit_number)
 			end
+		end
+	elseif radar.name == "rotational-tracker" then
+		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.rotating, radar.force.name)) do
+			log("[RT] rotational; " .. unit_number .. " ntt " .. ntt.entity.name)
 		end
 	end
 end)
+
 
 script.on_event(defines.events.on_train_changed_state, function(event)
 	local train = event.train

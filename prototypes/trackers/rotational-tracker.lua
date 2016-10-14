@@ -1,8 +1,7 @@
 
 -- rotational-tracker
 
-local tracker_name = "rotational-tracker"
-local _c = _config[tracker_name]
+function init_tracker(tracker_name, _c)
 
 data:extend({
     {
@@ -113,3 +112,5 @@ data:extend({
         order = "c-g-c",
     }
 })
+    
+end
