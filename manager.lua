@@ -51,18 +51,6 @@ manager.trains.getTracker = function(train)
     if state == defines.train_state.manual_control and train.speed == 0 then
         return RTDEF.tracker.unmoved
     end
-    
-    local stateComp = {
-        [RTDEF.tracker.running] = { defines.train_state.on_the_path, defines.train_state.arrive_signal,
-            defines.train_state.arrive_station, defines.train_state.manual_control,
-            defines.train_state.stop_for_auto_control
-        },
-
-        [RTDEF.tracker.unmoved] = { defines.train_state.wait_signal, defines.train_state.wait_station,
-            defines.train_state.path_lost, defines.train_state.no_schedule,  defines.train_state.no_path,
-            defines.train_state.manual_control_stop
-        }
-    }
 
     for tracker, comparedStates in pairs(stateComp) do
         for _, comparedState in ipairs(comparedStates) do
