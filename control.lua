@@ -13,11 +13,12 @@ require 'manager'
 RTDEF = {
 	tracker = {
 		none    = 1,    -- no scan
-		running = 2,    -- movement-tracker   ; vehicles with speed ~= 0
-		unmoved = 3,    -- immoveable-tracker ; vehicles with speed == 0
-		rotating= 4,    -- rotational-tracker ; chunks that should be scanned rotational
-		once    = 5,    -- scanning once like some kind of rocket or when a robot places/removes an entity
-		random  = 6,    -- scanning randomly, like construction bots?
+		running = 2,    -- movement-tracker   ; vehicles with speed ~= 0, nearly every 0.5 seconds
+		waiting = 3,    -- wait-tracker   ; vehicles with speed == 0, every 10 seconds
+		unmoved = 4,    -- immoveable-tracker ; static stuff, every 30 seconds
+		rotating= 5,    -- rotational-tracker ; chunks that should be scanned rotational, every minute
+		once    = 6,    -- scanning once like some kind of rocket or when a robot places/removes an entity
+		random  = 7,    -- scanning randomly, like construction bots?
 	},
 	managers = {
 		["train-stop"]  = "stops",
@@ -93,6 +94,9 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 			if ent.valid then
 				local area
 				if ntt.manager == "cars" then
+					
+					-- todo: cars should "forsee" one chunk more, than the players radar  --> config
+					
 					area = Area.adjust({
 						{
 							ent.position.x,
@@ -115,7 +119,10 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 					})
 				end
 				
+				-- TODO: do not chart this chunk, if already charted (test if useful?)
 				radar.force.chart(radar.surface, Area.expand(area, _config["movement-tracker"].scanned_radius))
+				
+				-- TODO: look if not moving for a while, so that it can be tracked my immoveables
 				
 			else
 				container.remove(unit_number)
@@ -130,6 +137,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 				local y1 = ent.position.y
 				radar.force.chart(radar.surface, Area.expand({{x1, y1}, {x1, y1}}, _config["immoveables-tracker"].scanned_radius))
 
+				-- look if suddenly moving (again)
 				if ntt.manager == "cars" then
 					if ent.speed ~= 0.0 then
 						ntt.tracker = RTDEF.tracker.running
@@ -165,7 +173,5 @@ script.on_event(defines.events.on_train_changed_state, function(event)
 		return unit_number
 		--- TODO: Trigger garbage-collection?
 	end
-	--- TODO: If not found then we need to add it
 	manager.add(RTDEF.managers.locomotive, train.front_stock)
-	-- log("[RT] Current ntttrkr: " .. inspect(global._ntttrkr))
 end)

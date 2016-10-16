@@ -29,8 +29,8 @@ end
 
 manager.trains = {}
 
---- add the train front_stock to the lists
---- if back_stock ~= front_stock add also that
+--- add the train front_stock and back_stock (first and last train-entity) to the lists
+--- Not if back_stock == front_stock (only wagon or loco)
 manager.trains.add = function(entity)
     local frontntt = table.deepcopy(nttInfo)
     frontntt.manager = "trains"
@@ -44,13 +44,14 @@ manager.trains.add = function(entity)
     end
 end
 
+--- we need to care about the tracker status, cause when the status changes, the speed is still 0 or it is still moving.
 manager.trains.getTracker = function(train)
     local state = train.state
 
-    -- only manual_control means: This is in manual-control-mode. manual_control_stop means: It was in automatic_control and stops now...
+    -- manual_control: This is in manual-control-mode. Player can stop and go, each time we get an event.
     if state == defines.train_state.manual_control and train.speed == 0 then
         return RTDEF.tracker.unmoved
-    end
+    end -- no else, the other case is managed in the loop
 
     for tracker, comparedStates in pairs(stateComp) do
         for _, comparedState in ipairs(comparedStates) do
