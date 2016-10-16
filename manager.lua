@@ -91,7 +91,7 @@ manager.cars.add = function(entity, force)
 end
 
 manager.cars.getTracker = function(entity)
-    if entity.speed ~= 0.0 then
+    if entity.passenger then
         return RTDEF.tracker.running
     else
         return RTDEF.tracker.unmoved

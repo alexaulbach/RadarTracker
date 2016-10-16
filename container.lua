@@ -9,7 +9,7 @@ container.set = function(ntt)
         if prevntt and prevntt.tracker ~= ntt.tracker then
             container.remove(unit_number)
         end
-        log("[RT] Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
+        -- log("[RT] Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
         global._ntt[unit_number] = ntt
         global._ntttrkr[fn][ntt.tracker][unit_number] = ntt
     else
@@ -23,7 +23,7 @@ container.get = function(unit_number)
     if ntt and ntt.valid then
         return ntt
     end
-    log("[RT] container.get: nil")
+    -- log("[RT] WARNING container.get: nil! -> " .. unit_number)
 end
 
 container.get_by_force = function(unit_number, force_name)
