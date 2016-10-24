@@ -10,6 +10,7 @@ container.set = function(ntt)
             container.remove(unit_number)
         end
         log("[RT] Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
+        dbg.container(ntt.entity.surface, ntt.entity.position, "+T:" .. ntt.tracker .. " M:"..ntt.manager)
         global._ntt[unit_number] = ntt
         global._ntttrkr[fn][ntt.tracker][unit_number] = ntt
     else
@@ -41,6 +42,7 @@ container.remove = function(unit_number)
         global._ntttrkr[fn][ntt.tracker][unit_number] = nil
         global._ntt[unit_number] = nil
         log("[RT] removed unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
+        dbg.container(ntt.entity.surface, ntt.entity.position, "-T:" .. ntt.tracker .. " M:"..ntt.manager)
     end
 end
 

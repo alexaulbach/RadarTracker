@@ -9,6 +9,7 @@ require 'config'
 require 'init'
 require 'container'
 require 'manager'
+require 'dbg'
 
 RTDEF = {
 	tracker = {
@@ -34,7 +35,7 @@ stateComp = {
 		defines.train_state.stop_for_auto_control
 	},
 
-	[RTDEF.tracker.unmoved] = { defines.train_state.wait_signal, defines.train_state.wait_station,
+	[RTDEF.tracker.waiting] = { defines.train_state.wait_signal, defines.train_state.wait_station,
 		defines.train_state.path_lost, defines.train_state.no_schedule,  defines.train_state.no_path,
 		defines.train_state.manual_control_stop
 	}
@@ -85,47 +86,60 @@ end
 
 ]]
 	
+movement_tracker_count = 0
 
 script.on_event(defines.events.on_sector_scanned, function(event)
 	local radar = event.radar
 	if radar.name == "movement-tracker" then
-		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.running, radar.force.name)) do
-			local ent = ntt.entity
-			if ent.valid then
-				local area
-				if ntt.manager == "cars" then
-					
-					-- todo: cars should "forsee" one chunk more, than the players radar  --> config
-					
-					area = Area.adjust({
-						{
-							ent.position.x,
-							ent.position.y
-						}, {
-							ent.position.x + ent.speed * _config["movement-tracker"].precognition * 4 * math.sin(2*math.pi * ent.orientation),
-							ent.position.y - ent.speed * _config["movement-tracker"].precognition * 4 * math.cos(2*math.pi * ent.orientation)
-						}
-					})
 
-				elseif ntt.manager == "trains" then
-					area = Area.adjust({
-						{
-							ent.position.x,
-							ent.position.y
-						}, {
-							ent.position.x + ent.train.speed * _config["movement-tracker"].precognition * math.sin(2*math.pi * ent.orientation),
-							ent.position.y - ent.train.speed * _config["movement-tracker"].precognition * math.cos(2*math.pi * ent.orientation)
-						}
-					})
+		local trackers = { RTDEF.tracker.running }
+		movement_tracker_count = movement_tracker_count + 1
+		-- every 20 times = every 10 seconds -> todo calculate in config
+		if movement_tracker_count % 20 then
+			table.insert(trackers, RTDEF.tracker.waiting)
+		end
+
+		for _,tracker in pairs(trackers) do
+			for unit_number, ntt in pairs(container.get_all_tracker_by_force(tracker, radar.force.name)) do
+				local ent = ntt.entity
+				if ent.valid then
+					local area
+					if ntt.manager == "cars" then
+						
+						-- todo: cars should "forsee" one chunk more, than the players radar  --> config
+						
+						area = Area.adjust({
+							{
+								ent.position.x,
+								ent.position.y
+							}, {
+								ent.position.x + ent.speed * _config["movement-tracker"].precognition * 10 * math.sin(2*math.pi * ent.orientation),
+								ent.position.y - ent.speed * _config["movement-tracker"].precognition * 10 * math.cos(2*math.pi * ent.orientation)
+							}
+						})
+	
+					elseif ntt.manager == "trains" then
+						area = Area.adjust({
+							{
+								ent.position.x,
+								ent.position.y
+							}, {
+								ent.position.x + ent.train.speed * _config["movement-tracker"].precognition * math.sin(2*math.pi * ent.orientation),
+								ent.position.y - ent.train.speed * _config["movement-tracker"].precognition * math.cos(2*math.pi * ent.orientation)
+							}
+						})
+					end
+					
+					-- TODO: do not chart this chunk, if already charted (test if useful? How long does it take to chart a chunk?)
+					area = Area.expand(area, _config["movement-tracker"].scanned_radius)
+					radar.force.chart(radar.surface, area)
+					dbg.charting(radar.surface, area, unit_number)
+					
+					-- TODO: look if not moving for a while, so that it can be tracked my immoveables
+					
+				else
+					container.remove(unit_number)
 				end
-				
-				-- TODO: do not chart this chunk, if already charted (test if useful?)
-				radar.force.chart(radar.surface, Area.expand(area, _config["movement-tracker"].scanned_radius))
-				
-				-- TODO: look if not moving for a while, so that it can be tracked my immoveables
-				
-			else
-				container.remove(unit_number)
 			end
 		end
 	elseif radar.name == "immoveables-tracker" then
@@ -135,7 +149,9 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 
 				local x1 = ent.position.x
 				local y1 = ent.position.y
-				radar.force.chart(radar.surface, Area.expand({{x1, y1}, {x1, y1}}, _config["immoveables-tracker"].scanned_radius))
+				local area = Area.expand({{x1, y1}, {x1, y1}}, _config["immoveables-tracker"].scanned_radius)
+				radar.force.chart(radar.surface, area)
+				dbg.charting(radar.surface, area, unit_number)
 
 				-- look if suddenly moving (again)
 				if ntt.manager == "cars" then
@@ -165,13 +181,23 @@ end)
 script.on_event(defines.events.on_train_changed_state, function(event)
 	local train = event.train
 	local unit_number = train.locomotives.front_movers[1].unit_number
-	-- log("[RT] >>>>>>> train unit " .. unit_number .. " changed state:" ..train.state)
 	local ntt = container.get(unit_number)
 	if ntt then
-		-- log("[RT] Exists: " .. unit_number .. " force " .. ntt.entity.force.name)
-		-- log("[RT] Current ntttrkr: " .. inspect(global._ntttrkr))
 		return unit_number
 		--- TODO: Trigger garbage-collection?
 	end
 	manager.add(RTDEF.managers.locomotive, train.front_stock)
 end)
+
+remote.add_interface("tr",
+	{
+		list = function()
+			game.player.print(inspect(global._ntttrkr))
+		end, 
+		
+		listone = function()
+			game.player.print(inspect(container.get(game.player.selected.train.back_stock.unit_number)))
+		end
+
+	}
+)

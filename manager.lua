@@ -6,7 +6,7 @@
 -- @type Entity Info
 nttInfo = {
     manager = "", -- managers
-    tracker = "", -- tracker-type: running, unmoved, fixed, once, random
+    tracker = "", -- tracker-type: running, waiting, unmoved, fixed, once, random
     entity = false, -- ref to entity
 }
 
@@ -50,7 +50,7 @@ manager.trains.getTracker = function(train)
 
     -- manual_control: This is in manual-control-mode. Player can stop and go, each time we get an event.
     if state == defines.train_state.manual_control and train.speed == 0 then
-        return RTDEF.tracker.unmoved
+        return RTDEF.tracker.waiting
     end -- no else, the other case is managed in the loop
 
     for tracker, comparedStates in pairs(stateComp) do
@@ -69,7 +69,7 @@ end
 
 manager.stops = {}
 
-manager.stops.add = function(entity, force)
+manager.stops.add = function(entity)
     local ntt = table.deepcopy(nttInfo)
     ntt.manager = "stops"
     ntt.tracker = RTDEF.tracker.unmoved
@@ -83,10 +83,10 @@ end
 
 manager.cars = {}
 
-manager.cars.add = function(entity, force)
+manager.cars.add = function(entity)
     local ntt = table.deepcopy(nttInfo)
     ntt.manager = "cars"
-    ntt.tracker = RTDEF.tracker.unmoved
+    ntt.tracker = manager.cars.getTracker(entity)
     ntt.entity  = entity
     container.set(ntt)
 end
@@ -95,6 +95,6 @@ manager.cars.getTracker = function(entity)
     if entity.passenger then
         return RTDEF.tracker.running
     else
-        return RTDEF.tracker.unmoved
+        return RTDEF.tracker.waiting
     end
 end

@@ -18,4 +18,4 @@ end
     
 require("prototypes.radar-tracker")
 
-
+require("prototypes.other")

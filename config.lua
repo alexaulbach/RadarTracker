@@ -8,13 +8,13 @@ _config = {
         ["precognition"]   = 32.0     -- look-forwad for movement-tracker, in tiles
     },
     ["immoveables-tracker"] = {
-        ["energy_usage"]    = 1000.0, -- kilo Watt
-        ["refresh_time"]    = 10.0,   -- seconds
-        ["scanned_radius"]  = 5.0,    -- radius scanned around the entity
+        ["energy_usage"]    = 500.0,  -- kilo Watt
+        ["refresh_time"]    = 30.0,   -- seconds
+        ["scanned_radius"]  = 7.0,    -- radius scanned around the entity
     },
     ["rotational-tracker"]  = {
         ["energy_usage"]    = 1000.0, -- kilo Watt
-        ["refresh_time"]    = 10.0,   -- seconds
+        ["refresh_time"]    = 2.0,    -- seconds
         ["segment_per_refresh"] = 0.26179938779915 -- in rad (0.26179938779915 rad ~ 12 degrees)
     }
 }
