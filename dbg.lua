@@ -11,6 +11,6 @@ dbg.charting = function(surface, area, unit_number)
     end
 end
 
-dbg.container = function(surface, pos, text)
-    surface.create_entity({ name = "flying-text-chartedges", position = pos, text = text})
+dbg.ftext = function(surface, pos, text)
+    surface.create_entity({ name = "flying-text", position = pos, text = text})
 end

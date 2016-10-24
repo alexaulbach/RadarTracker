@@ -14,8 +14,19 @@ nttInfo = {
 -- @type manager
 manager = {}
 
-manager.add = function(type, entity)
+manager.add = function(entity, type)
     if entity.valid then
+        if not type then
+            for entityType, mappedName in pairs(RTDEF.managers) do
+                if entity.type == entityType then
+                    type = mappedName
+                    break
+                end
+            end
+            if not type then
+                return false
+            end
+        end
         manager[type].add(entity)
         return true
     end

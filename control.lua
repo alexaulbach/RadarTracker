@@ -67,7 +67,7 @@ script.on_event(defines.events.on_built_entity, function(event)
 	local mngr = RTDEF.managers[entity.type]
 	if mngr then
 		log("[RT] built entity: " .. entity.unit_number .. " manager " .. mngr)
-		manager.add(mngr, entity)
+		manager.add(entity, mngr)
 	end
 end)
 
@@ -85,29 +85,33 @@ for i, carr in pairs(game.player.selected.train.carriages) do
 end
 
 ]]
-	
-movement_tracker_count = 0
 
 script.on_event(defines.events.on_sector_scanned, function(event)
 	local radar = event.radar
 	if radar.name == "movement-tracker" then
 
 		local trackers = { RTDEF.tracker.running }
-		movement_tracker_count = movement_tracker_count + 1
+		global.movement_tracker_count = global.movement_tracker_count + 1
 		-- every 20 times = every 10 seconds -> todo calculate in config
-		if movement_tracker_count % 20 then
+		if global.movement_tracker_count % 20 == 0 then
 			table.insert(trackers, RTDEF.tracker.waiting)
 		end
 
+		log(inspect(trackers) .. global.movement_tracker_count)
+		
 		for _,tracker in pairs(trackers) do
 			for unit_number, ntt in pairs(container.get_all_tracker_by_force(tracker, radar.force.name)) do
 				local ent = ntt.entity
 				if ent.valid then
 					local area
 					if ntt.manager == "cars" then
-						
+						-- turn into wait-mode if passenger has left
+						if not ent.passenger then
+							ntt.tracker = RTDEF.tracker.waiting
+							container.set(ntt)
+						end
+
 						-- todo: cars should "forsee" one chunk more, than the players radar  --> config
-						
 						area = Area.adjust({
 							{
 								ent.position.x,
@@ -135,8 +139,6 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 					radar.force.chart(radar.surface, area)
 					dbg.charting(radar.surface, area, unit_number)
 					
-					-- TODO: look if not moving for a while, so that it can be tracked my immoveables
-					
 				else
 					container.remove(unit_number)
 				end
@@ -155,6 +157,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 
 				-- look if suddenly moving (again)
 				if ntt.manager == "cars" then
+					dbg.ftext(radar.surface, ent.position, "C:" .. ntt.tracker .. " - " .. ent.speed)
 					if ent.speed ~= 0.0 then
 						ntt.tracker = RTDEF.tracker.running
 						container.set(ntt)
@@ -180,24 +183,29 @@ end)
 
 script.on_event(defines.events.on_train_changed_state, function(event)
 	local train = event.train
-	local unit_number = train.locomotives.front_movers[1].unit_number
-	local ntt = container.get(unit_number)
-	if ntt then
-		return unit_number
-		--- TODO: Trigger garbage-collection?
-	end
-	manager.add(RTDEF.managers.locomotive, train.front_stock)
+	manager.add(train.front_stock, RTDEF.managers.locomotive)
 end)
+
+script.on_event(defines.events.on_player_driving_changed_state, function(event)
+	local player = game.players[event.player_index]
+	if not player.vehicle then
+		-- not sitting in a vehicle...
+		return
+	end
+	-- todo: need to watch for force?? Mabe in that case the entity is added to the own force-radars instead of vehicles?
+	manager.add(player.vehicle)
+end)
+
 
 remote.add_interface("tr",
 	{
 		list = function()
 			game.player.print(inspect(global._ntttrkr))
+            log(inspect(global._ntttrkr))
 		end, 
 		
 		listone = function()
 			game.player.print(inspect(container.get(game.player.selected.train.back_stock.unit_number)))
 		end
-
 	}
 )

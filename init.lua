@@ -13,6 +13,7 @@ Init.init = function()
     end
 
     log("[RT] ----------------- INIT --------------------------")
+    global.movement_tracker_count = 0
     Init.initData()
     
     for entityType, mappedName in pairs(RTDEF.managers) do
@@ -36,7 +37,7 @@ Init.type = function(entityType, mappedName)
 
     for _, entity in pairs(entities) do
         local force_name = entity.force.name
-        manager.add(mappedName, entity) 
+        manager.add(entity, mappedName) 
         log("[RT] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
     end
 end
