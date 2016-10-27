@@ -11,6 +11,7 @@ require 'container'
 require 'manager'
 require 'dbg'
 
+
 RTDEF = {
 	tracker = {
 		none    = 1,    -- no scan
@@ -199,13 +200,28 @@ end)
 
 remote.add_interface("tr",
 	{
+		help = function()
+			game.player.print("-----  RadarTracker: Remote functions  -----")
+			game.player.print("|  help()  - This help")
+			game.player.print("|  list()  - Show all currently tracked objects (ordered by force and tracker)")
+			game.player.print("|  show()  - Show tracker entry of hovered entity (Only if tracked!)")
+			game.player.print("|  debug() - switch debug-functionality on/off")
+			game.player.print("")
+		end,
+		
 		list = function()
 			game.player.print(inspect(global._ntttrkr))
             log(inspect(global._ntttrkr))
 		end, 
 		
-		listone = function()
+		show = function()
 			game.player.print(inspect(container.get(game.player.selected.train.back_stock.unit_number)))
-		end
+		end,
+		
+		debug = function()
+			global.debugger = not global.debugger
+			__switchDebug()
+			game.player.print("[RT] Debugging: " .. inspect(global.debugger))
+		end,
 	}
 )
