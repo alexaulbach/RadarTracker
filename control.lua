@@ -98,7 +98,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 			table.insert(trackers, RTDEF.tracker.waiting)
 		end
 
-		log(inspect(trackers) .. global.movement_tracker_count)
+log(inspect(trackers) .. global.movement_tracker_count)
 		
 		for _,tracker in pairs(trackers) do
 			for unit_number, ntt in pairs(container.get_all_tracker_by_force(tracker, radar.force.name)) do
@@ -107,7 +107,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 					local area
 					if ntt.manager == "cars" then
 						-- turn into wait-mode if passenger has left
-						if not ent.passenger then
+						if not ent.passenger and ntt.tracker ~= RTDEF.tracker.waiting then
 							ntt.tracker = RTDEF.tracker.waiting
 							container.set(ntt)
 						end
@@ -141,7 +141,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 					dbg.charting(radar.surface, area, unit_number)
 					
 				else
-					container.remove(unit_number)
+					container.remove(ntt)
 				end
 			end
 		end
@@ -158,7 +158,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 
 				-- look if suddenly moving (again)
 				if ntt.manager == "cars" then
-					dbg.ftext(radar.surface, ent.position, "C:" .. ntt.tracker .. " - " .. ent.speed)
+					dbg.ftext(radar.surface, ent.position, "CAR " .. ntt.tracker .. " - " .. ent.speed)
 					if ent.speed ~= 0.0 then
 						ntt.tracker = RTDEF.tracker.running
 						container.set(ntt)
@@ -171,7 +171,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 				end
 				
 			else
-				container.remove(unit_number)
+				container.remove(ntt)
 			end
 		end
 	elseif radar.name == "rotational-tracker" then
@@ -210,12 +210,37 @@ remote.add_interface("tr",
 		end,
 		
 		list = function()
-			game.player.print(inspect(global._ntttrkr))
-            log(inspect(global._ntttrkr))
+			for fn, trackers in pairs(global._ntttrkr) do
+				prnt_n_log("--------- " .. fn .. " ---------")
+				for tracker, units in pairs(trackers) do
+					prnt_n_log("---- " .. tracker)
+					for unit_number, ntt in pairs(units) do
+						prnt_ntt(ntt, unit_number, fn) 
+					end
+				end
+			end
 		end, 
 		
 		show = function()
-			game.player.print(inspect(container.get(game.player.selected.train.back_stock.unit_number)))
+			entity = game.player.selected
+			local unit_number
+			if entity.type == 'train' then
+				unit_number = entity.train.back_stock.unit_number
+			else
+				unit_number = entity.unit_number
+			end
+			local ntt = container.get(unit_number)
+			if ntt then
+				prnt_ntt(ntt, unit_number)
+				if ntt.entity.unit_number ~= unit_number then
+					prnt_n_log("UNIT NUMBER NOT EQUAL!")
+				end
+			end
+		end,
+
+		init = function()
+			Init.clearInitialization()
+			Init.init()
 		end,
 		
 		debug = function()

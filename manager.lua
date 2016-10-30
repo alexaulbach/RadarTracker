@@ -5,9 +5,14 @@
 --- Entity Info
 -- @type Entity Info
 nttInfo = {
-    manager = "", -- managers
-    tracker = "", -- tracker-type: running, waiting, unmoved, fixed, once, random
-    entity = false, -- ref to entity
+    entity = false,  -- ref to entity
+    unit_number = 0, -- copy of unit_number
+    manager = "",    -- managers
+    tracker = 0,     -- tracker-type: running, waiting, unmoved, fixed, once, random
+    force_name = "", -- name of force
+    prev = {
+        tracker = 0, -- previous tracker, used for list-handling
+    }
 }
 
 --- manager class

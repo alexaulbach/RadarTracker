@@ -1,9 +1,37 @@
 
---- debugger class ON
+function prnt_n_log(str)
+    game.print(str)
+    log("[TR] " .. str)
+end
+
+function prnt_ntt(ntt, unit_number, force_name)
+    if unit_number == nil then
+        unit_number = ntt.entity.unit_number
+    end
+    if force_name == nil then
+        force_name = ntt.entity.force.name
+    end
+
+    local str = "UN: " .. unit_number .. " FN: " .. force_name .. "TRK: " .. ntt.tracker .. " MNGR: " .. ntt.manager
+    prnt_n_log(str)
+end
+
+--- debugger class
 
 global.debugger = global.debugger or true
 
 dbg = {}
+
+
+-------------------------------
+
+dbg.mode = function()
+    return false
+end
+
+dbg._mode = function()
+    return true
+end
 
 -------------------------------
 
@@ -21,28 +49,30 @@ end
 
 -------------------------------
 
-dbg.ftext = function(surface, pos, text)
+dbg.ftext = function(surface, pos, text, offset)
 end
 
-dbg._ftext = function(surface, pos, text)
+dbg._ftext = function(surface, pos, text, offset)
+    if offset ~= nil then
+        pos.y = pos.y + offset
+    end
     surface.create_entity({ name = "flying-text", position = pos, text = text})
 end
 
 -------------------------------
 
+--- exchanges all functions without "_" with the same parallel-function with "_"
 function __switchDebug()
-    log("SwitchDebug" .. inspect(dbg))
+    log("[RT] SwitchDebug from " .. tostring(dbg.mode()) .. " to  " .. tostring(dbg._mode()))
     for funcName, func in pairs(dbg) do
-        log("F " .. funcName .. " - " .. inspect(func))
         if (string.sub(funcName, 0, 1) ~= "_") then
             local funcName2 = "_" .. funcName
-            log("F " .. funcName2)
             dbg[funcName] = dbg[funcName2]
             dbg[funcName2] = func
         end
     end
 end
 
-if global.debugger == false then
+if global.debugger ~= dbg.mode() then
     __switchDebug()
 end
