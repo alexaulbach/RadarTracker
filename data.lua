@@ -15,7 +15,6 @@ for tracker, conf in pairs(_config) do
     end
     log("[RT] " .. str)
 end
-    
-require("prototypes.radar-tracker")
 
+require("prototypes.radar-tracker")
 require("prototypes.other")

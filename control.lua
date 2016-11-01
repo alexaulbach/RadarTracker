@@ -90,16 +90,13 @@ end
 script.on_event(defines.events.on_sector_scanned, function(event)
 	local radar = event.radar
 	if radar.name == "movement-tracker" then
-
+		
 		local trackers = { RTDEF.tracker.running }
 		global.movement_tracker_count = global.movement_tracker_count + 1
-		-- every 20 times = every 10 seconds -> todo calculate in config
-		if global.movement_tracker_count % 20 == 0 then
+		if global.movement_tracker_count % (_config["movement-tracker"].waiting_tracker_interval) == 0 then
 			table.insert(trackers, RTDEF.tracker.waiting)
 		end
 
-log(inspect(trackers) .. global.movement_tracker_count)
-		
 		for _,tracker in pairs(trackers) do
 			for unit_number, ntt in pairs(container.get_all_tracker_by_force(tracker, radar.force.name)) do
 				local ent = ntt.entity
@@ -205,6 +202,7 @@ remote.add_interface("tr",
 			game.player.print("|  help()  - This help")
 			game.player.print("|  list()  - Show all currently tracked objects (ordered by force and tracker)")
 			game.player.print("|  show()  - Show tracker entry of hovered entity (Only if tracked!)")
+			game.player.print("|  init()  - (Re-)initialize everything")
 			game.player.print("|  debug() - switch debug-functionality on/off")
 			game.player.print("")
 		end,

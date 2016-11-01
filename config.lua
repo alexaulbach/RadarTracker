@@ -5,7 +5,8 @@ _config = {
         ["energy_usage"]   = 10000.0, -- kilo Watt
         ["refresh_time"]   = 0.5,     -- seconds
         ["scanned_radius"] = 5.0,     -- radius scanned around the entity
-        ["precognition"]   = 32.0     -- look-forwad for movement-tracker, in tiles
+        ["precognition"]   = 32.0,    -- look-forwad for movement-tracker, in tiles
+        ["waiting_tracker_refresh_time"] = 17.5 -- seconds between tracking waiting vehicles
     },
     ["immoveables-tracker"] = {
         ["energy_usage"]    = 500.0,  -- kilo Watt
@@ -18,3 +19,7 @@ _config = {
         ["segment_per_refresh"] = 0.26179938779915 -- in rad (0.26179938779915 rad ~ 12 degrees)
     }
 }
+
+-- calculate after how many intervals of the movement-tracker the waiting tracker is triggered.
+_config["movement-tracker"].waiting_tracker_interval = math.floor(_config["movement-tracker"].waiting_tracker_refresh_time / _config["movement-tracker"].refresh_time)
+
