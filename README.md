@@ -13,11 +13,11 @@ only for the "most important" things, like
 ### About Charting (technical)
 Charting is the action, when a radar scans a chunk. Only whole chunks (32x32 tiles) can be charted.
 
-Once a chunk is charted, it keeps up-to-date for **10 seconds**.
-Withing that time the piece of map for this chunk is updated for every tick.
-You can see that cleary that the chunk suddenly is highlighted and then gets darker and darker
+Once a chunk is charted, it keeps up-to-date for **10 seconds** (this is default game-mechanics).
+Within that time the piece of map for this chunk is updated for every tick.
+You can see that cleary when you look on the map and a chunk suddenly is highlighted and then gets darker and darker
 until it is the same color as the other uncharted chunks.
-After 10 seconds the map of this chunk falls back into the "fog of war": The map is not re-charted
+In other words: 10 seconds after the last chart of a chunk the map of this chunk falls back into the "fog of war": The map is not re-charted
 and what you see on map might be outdated.
 
 This means: The default radar charts an area of 100x100 tiles every tick (100x100 means the chunks,
@@ -41,15 +41,17 @@ This mod tries to achieve this goals:
 You can research the entities in the following order:
 
 #### Immovebles tracker
-Tracks train-stops every 30 seconds. No need to place radars everywhere.
+Charts train-stops every 30 seconds. No need to place radars everywhere.
 
 This means: A train-stop is charted once every 30 seconds, then it keeps 10 seconds completly charted
 and 20 seconds in fog-of-war until it is re-charted. This is with default trains a good compromise.
 
 #### Movement tracker
-Scans every vehicle (trains, cars, tank...).
-If vehicle is driving every 1/2 seconds and tries to look forward.
-If it is waiting every 17.5 seconds (10 sconds visible, 7.5 in fog).
+Charts every vehicle (trains, cars, tank...).
+
+If vehicle is driving: Every 1/2 seconds and tries to look forward. (This is with the default vehicles good enough, but there might be problems with very fast vehicles)
+
+If it is waiting: Every 17.5 seconds (10 sconds visible, 7.5 in fog).
 
 #### Rotation tracker
 
@@ -57,7 +59,7 @@ If it is waiting every 17.5 seconds (10 sconds visible, 7.5 in fog).
 When ready it should scan a very wide range (2000 tiles?) in "circle-segments", like real radars. Only chunks with owned entities on it.
 Takes some time for a rotation (a minute or two).
 
-### Research
+#### Research
 You need to research the different radar-tracker-technologies before you can built and place the radars.
 TODO: List needed items for research
 
@@ -67,7 +69,7 @@ TODO: List of needed items to built
 #### Energy Usage
 TODO: (auto-generated) list of needed power
 
-### Remote Calls
+## Remote Calls
 Use /c remote.call('RT', 'help') to see all commands.
 TODO: Generate list
 
@@ -79,7 +81,7 @@ TODO: Generate list
 - Configuration file for energy-usages etc.
 
 #Background
-To be honest, the biggest reason why I did this was, that I needed something to see my trains on my 20km map.
+To be honest, the biggest reason why I did this was, that I needed something to see my trains on my 20km² map.
 I had overseen, that Optera did a 0.13 fix, so I fixed it too for myself (cause I needed it for playing on my really big map). I think I wouldn't have it, if I read the whole thread. But when I was on it I fixed here a bit and there a bit and I had some more ideas (The second reason was learning more Lua programming and Factorio mods of course).
 And suddenly it was as it was. Then I though: Would be a pity not to publish it. Forgive me, it's my first mod. :)
 
