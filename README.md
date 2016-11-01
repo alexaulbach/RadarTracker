@@ -112,10 +112,8 @@ Meanwhile the only remainings are the graphics, prototypes and some lines of cod
 https://github.com/alexaulbach/RadarTracker
 
 #Ideas/TODOs
-- New entity/item images.
 - Move directory "one level lower" to enable built-scripts etc. in package.
 - Script for automated packaging (Zip).
-- Move literals into Configuration.
 - Take Tracker out of control.lua and decrease complexity (nesting).
 - Tracker should not calculate entity-status.
 - Debugger should calculate output-string itself for speed reasons.
@@ -130,6 +128,6 @@ https://github.com/alexaulbach/RadarTracker
 - Random-Tracker: Randomly scan minerals by revealing a similar "virtual" surface. Good to search for far away minerals without revealing current map.
 - A tool or so to add other immoveable entities to the immoveable-tracker.
 - With more trackers: spread their scan-times so, that they do not chart all at once.
-- Upgrade function to convert (several) the train-tracker radars to to radar-tracker (good learning subproject).
+- Upgrade functio   n to convert (several) the train-tracker radars to to radar-tracker (good learning subproject).
 - Scanner-robots. You can send them out and they will automatically reveal map.
 - "Train Radar"  - some special type of locomotive/wagon. The train can be programmed to drive in circles to scan the area beside your rails in regular intervals, but needs excessive amounts of energy.
