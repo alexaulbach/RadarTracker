@@ -74,30 +74,35 @@ Use /c remote.call('RT', 'help') to see all commands.
 TODO: Generate list
 
 # Features:
-- Fast initialization: Initial scan of a 20,000 tiles-map in under 10 seconds. 
-- Tracks only first and last unit of a train instead of the whole train. (see Ideas)
+- This is my first Factorio mod, I appreciate positive and negative critics.
+- Fast initialization: Initial scan of a 20,000 tiles-map in under 10 seconds (vs. half an hour). 
+- Tracks only first and last unit of a train instead of the whole train. (Imporovement is planned, see ideas)
 - CPU-save: For 300 trains (600 entities) only 3-6 updates per second slower. (Well, still too slow)
 - Debug-mode. Useful and interesting...
 - Configuration file for energy-usages etc.
 
 #Background
 To be honest, the biggest reason why I did this was, that I needed something to see my trains on my 20km² map.
-I had overseen, that Optera did a 0.13 fix, so I fixed it too for myself (cause I needed it for playing on my really big map). I think I wouldn't have it, if I read the whole thread. But when I was on it I fixed here a bit and there a bit and I had some more ideas (The second reason was learning more Lua programming and Factorio mods of course).
+I had overseen, that Optera did a 0.13 fix, so I fixed it too for myself (cause I needed it for playing on my really big map).
+I think I wouldn't have made it, if I had read the whole thread. But when I was on it I fixed here a bit and there a bit
+and I had some more ideas (The second reason was learning more Lua programming and Factorio mods of course).
 And suddenly it was as it was. Then I though: Would be a pity not to publish it. Forgive me, it's my first mod. :)
 
 ## Originating from Train-Tracker
-This is originally a mod called "train-tracker".
-
-This mod is is formerly known as **Rail-Tracker** by MrDoomah.
+This mod is is originated from **Train-Tracker** by MrDoomah.
 https://forums.factorio.com/viewtopic.php?f=92&t=18368
-It was updated to v0.13 by Optera (in the same thread).
+It was updated to v0.13 by Optera (in the same thread) and me.
 
 Meanwhile the only remainings are the graphics, prototypes and some lines of code about the prediction of train-direction.
 
 #Version history
 0.3.0 2016-10-31
-- stabilized, immoveables and movement tracker now works completely.
-- debug-mode
+- Stabilized, immoveables and movement tracker now works reliable.
+- Debug-mode. I think the idea of the "debugger" is cool. It helped me a lot to find the bugs, to see, when an entity changed state.
+- New (ugly!) graphics to distinct better between the two types.
+
+0.2.0 2016-10-10
+- Silently reworking completely. No release.
 
 0.1.3 2016-09-30 
 - Introduced tracker types. Types are: trains (locos or wagons), stops (all train stops), cars (cars, tanks, satellite-uplink...); currently still only trains works.
@@ -108,20 +113,25 @@ Meanwhile the only remainings are the graphics, prototypes and some lines of cod
 0.1.2 2016-09-04
 - Initial version
 
-#Git Hub
+# Links
+## Git Hub
 https://github.com/alexaulbach/RadarTracker
 
+## Factorio Forum
+TODO
+
 #Ideas/TODOs
-- Move directory "one level lower" to enable built-scripts etc. in package.
-- Script for automated packaging (Zip).
-- Take Tracker out of control.lua and decrease complexity (nesting).
-- Tracker should not calculate entity-status.
+- Script for automated packaging (Zip) and doing the symlinks (Factorio Stdlib, mod-link into mods-folder)
+- Release
+- Add better description in research etc. into locale.
+- Take tracker-code out of control.lua and decrease complexity (nesting).
+- Tracker should not calculate entity-status (managers job).
 - Debugger should calculate output-string itself for speed reasons.
 - Remote function for adding/deleting entities to/from list. Own file.
 - Track only front entity if train is running.
 - Don't track back entity if no reverse loco.
-- Look if _new chunk_ found and only then chart that chunk.
-- Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). This needs to introduce to bind trains to trackers.
+- Look if _new chunk_ would be found and only then chart that chunk.
+- Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). Big change: This needs to introduce to bind entities to trackers.
 - The more trains a tracker needs to scan then, the slower it will refresh. Or the more energy it takes?
 - Rotational-Tracker: Add a new radar-functionality, which scans 360˚ in a minute, but only those chunks, that have entities built on ground. Range depends only on power it can get.
 - Once-Tracker: Scans when entity is built/removed

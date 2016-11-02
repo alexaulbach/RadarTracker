@@ -1,0 +1,11 @@
+{
+ "name": "RadarTracker", 
+ "version": "0.3.0", 
+ "title": "Radar Tracker", 
+ "author": "ßilk", 
+ "contact": "https://forums.factorio.com/memberlist.php?mode=viewprofile&u=507", 
+ "homepage": "https://github.com/alexaulbach/RadarTracker", 
+ "description": "Tracks vehicles even outside your radar range - currently only trains", 
+ "factorio_version": "0.14",
+ "dependencies": ["base >= 0.12.0"]
+}
