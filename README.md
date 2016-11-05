@@ -1,5 +1,5 @@
 # RadarTracker
-This is a Factorio mod. It adds a new types of "trackers".
+This is a Factorio mod. It adds a new types of "trackers", which can track **trains, cars, tanks and train-stops**..
 
 ## Description
 This mod is for bigger factories, that already covers a wide area and a bigger train-network.
