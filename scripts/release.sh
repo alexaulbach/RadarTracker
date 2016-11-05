@@ -1,4 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin bash
+# 
+# release.sh <sourceDir> <stdlibSrcDir> <targetDir> 
+# 
+# sourceDir is the git-repository-root-dir of your mod. It must include a mod-subdir, which contains info.json etc.
+# stdlibSrcDir is the git-repository-root-dir of the FactorioStandard-Lib. The stdlib is copied into your mod-dir.
+# targetDir is the target-directory where the zipped mod should be placed. 
+# 
+# Example call:
+# > source scripts/release.sh . ../Factorio-Stdlib/ /tmp
+#
+# Calling this script via source-command is only needed if you don't set the x-bits of this script.
+# 
+
 
 sourceDir=$1
 stdlibSrcDir=$2
@@ -6,7 +19,6 @@ targetDir=$3
 
 tmpdir=`mktemp -d`
 
-# copy to mod-dir
 currentDir=`pwd`
 cd "$sourceDir"
 
@@ -26,6 +38,7 @@ echo "Version:    $version"
 echo "Tmpdir:     $tmpdir"
 echo "Target-Zip: $targetZip"
 
+# copy to mod-dir
 cd "$sourceDir"
 git archive --prefix="$fullName/" HEAD:mod | tar -C "$tmpdir" -xf -
 cp README.md "$tmpdir/$fullName"

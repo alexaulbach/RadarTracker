@@ -121,8 +121,6 @@ https://github.com/alexaulbach/RadarTracker
 TODO
 
 #Ideas/TODOs
-- Script for automated packaging (Zip) and doing the symlinks (Factorio Stdlib, mod-link into mods-folder)
-- Release
 - Add better description in research etc. into locale.
 - Take tracker-code out of control.lua and decrease complexity (nesting).
 - Tracker should not calculate entity-status (managers job).
