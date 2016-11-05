@@ -1,33 +1,43 @@
 #!/usr/bin/env bash
 
-targetDir=$1
-sourceDir=$2
-stdlibSrcDir=$3
+sourceDir=$1
+stdlibSrcDir=$2
+targetDir=$3
 
 tmpdir=`mktemp -d`
 
 # copy to mod-dir
-git archive HEAD:mod/ | tar -C "$tmpdir" -xf -
-cp -a README.md "$tmpdir"
+currentDir=`pwd`
+cd "$sourceDir"
 
 # json parsing for the poors
-version=`cat $tmpdir/info.json | sed '/\"version\"/!d' | sed s/\"version\":\ //g | sed s/[\",\ ]//g`
-modname=`cat $tmpdir/info.json | sed '/\"name\"/!d' | sed s/\"name\":\ //g | sed s/[\",\ ]//g`
+version=`cat mod/info.json | sed '/\"version\"/!d' | sed s/\"version\":\ //g | sed s/[\",\ ]//g`
+modname=`cat mod/info.json | sed '/\"name\"/!d' | sed s/\"name\":\ //g | sed s/[\",\ ]//g`
+fullName="$modname""_$version"
+
+cd "$currentDir"
+cd "$targetDir"
+targetDir=`pwd`
+cd "$currentDir"
 
 echo "Modname:    $modname"
-echo "Target-Zip: $targetDir"
-echo "Source-Dir: $sourceDir"
 echo "Version:    $version"
 echo "Tmpdir:     $tmpdir"
+echo "Target-Zip: $targetDir/$fullName"
 
-# copy readme
-cp -a $tmpdir/README.md $tmpdir/mod
+cd "$sourceDir"
+git archive --prefix="$fullName" HEAD:mod | tar -C "$tmpdir" -xf -
+cp README.md "$tmpdir/$fullName"
+cd "$currentDir"
+
 
 # copy Factorio Standard-lib into release
-currentDir=`pwd`
-cd $stdlibSrcDir
-git archive --prefix=stdlib/ HEAD:stdlib/ | tar -C "$tmpdir" -xf -
-cd $currentDir
-
+cd "$stdlibSrcDir"
+git archive --prefix="$fullName/stdlib/" HEAD:stdlib/ | tar -C "$tmpdir" -xf -
+cd "$currentDir"
 
 # create zip
+cd "$tmpdir"
+rm "$targetDir/$fullName"
+zip -q -r "$targetDir/$fullName.zip" .
+cd "$currentDir"
