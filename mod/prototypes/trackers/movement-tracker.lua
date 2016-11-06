@@ -10,7 +10,7 @@ data:extend({
         icon = "__"..mod_name.."__/graphics/VehicleTracker-item.png",
         flags = {"goes-to-quickbar"},
         subgroup = "transport",
-        order = "a[train-system]-h[train-tracker]",
+        order = "a[radar-tracker]-a["..tracker_name.."]",
         place_result = tracker_name,
         stack_size = 5
     }
@@ -91,7 +91,7 @@ data:extend({
         name = tracker_name,
         icon = "__"..mod_name.."__/graphics/train-tracker-technology.png",
         icon_size = 128,
-        prerequisites = {"logistics-2", "immoveables-tracker"},
+        prerequisites = {"automated-rail-transportation", "immoveables-tracker"},
         effects =
         {
             {
@@ -101,11 +101,11 @@ data:extend({
         },
         unit =
         {
-            count = 200,
+            count = 100,
             ingredients =
             {
-                {"science-pack-1", 2},
-                {"science-pack-2", 1}
+                {"science-pack-1", 1},
+                {"science-pack-2", 2}
             },
             time = 20
         },

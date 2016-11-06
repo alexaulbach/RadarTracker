@@ -1,11 +1,11 @@
 {
  "name": "RadarTracker",
- "version": "0.3.1",
+ "version": "0.3.2",
  "title": "Radar Tracker",
  "author": "ßilk",
  "contact": "https://forums.factorio.com/memberlist.php?mode=viewprofile&u=507", 
  "homepage": "https://github.com/alexaulbach/RadarTracker",
- "description": "Tracks trains, train-stops and any other vehicles - even outside your radar range", 
+ "description": "Watch your trains everywhere, or use car as simple radar: This adds 'radar-trackers', which tracks trains, cars, tanks (any vehicle-type) and train-stop (immoveables).", 
  "factorio_version": "0.14",
  "dependencies": ["base >= 0.12.0"]
 }

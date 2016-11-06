@@ -10,7 +10,7 @@ data:extend({
         icon = "__"..mod_name.."__/graphics/train-tracker-item.png",
         flags = {"goes-to-quickbar"},
         subgroup = "transport",
-        order = "a[train-system]-h[train-tracker]",
+        order = "a[radar-tracker]-c["..tracker_name.."]",
         place_result = tracker_name,
         stack_size = 5
     }

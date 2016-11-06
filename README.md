@@ -1,15 +1,19 @@
 # RadarTracker
-This is a Factorio mod. It adds a new types of "trackers", which can track **trains, cars, tanks and train-stops**..
+A Factorio mod, that adds "trackers", which can track **trains, cars, tanks (any vehicle-type) and immoveables like train-stops**..
 
-## Description
+# Description
+Radar-tracker tries to let you keep track of your factory: It triggers _charting_ (actualization of the map) only for the "most important" things.
+- The Movement-tracker tracks *vehicles* (trains, cars and tanks):
+  - Technique can be researched with Logistics-2.
+  - Moving vehicles will be charted every 0.5 seconds, and the radars scans into the forward-direction.
+  - Waiting vehicles will be charted every 17.5 seconds.
+- The Immoveables-tracker tracks train-stops every 30 seconds.
+
+# Long description
 This mod is for bigger factories, that already covers a wide area and a bigger train-network.
 But it is also useful for exploration by car/tank.
 
-Radar-tracker tries to let you keep track of your factory: It triggers _charting_ (actualization of the map) only for the "most important" things, like
-- train-stops (immoveables)
-- trains, cars and tanks (movement)
-
-### About Charting (technical)
+## About Charting (technical)
 Charting is the action, when a radar scans a chunk. Only whole chunks (32x32 tiles) can be charted.
 
 Once a chunk is charted, it keeps up-to-date for **10 seconds** (this is default game-mechanics).
@@ -24,47 +28,55 @@ that are "touched" by this area will be charted).
 
 So for very big factories it is a good idea to reduce the number of radars. But with growing factory you just need the overview!
 
-### Goals
+## What you can do with it?
+
+- See always all your trains.
+- Leave a car in your outpost and see (up to) 4 chunks every 17.5 seconds around the car.
+- See, what's going on at the train stations (every 30 seconds).
+- Drive around with your car and see longer scan-range in driving-direction.
+
+## Goals
 This mod tries to achieve this goals:
 - Remove stupid game-play to place more and more radars to keep track.
 - Keep track of your *most important* stuff without always need to place another radar.
 - Reduce need for CPU-expensive full-scan radar and replace with a "good-enough" charting.
 - Add a new game-play that it makes sense to switch the new trackers off if they take too much energy.
+- Radar only for intensive non-stop-scanning.
 
-## Docs
+# Docs
 
-### Entities
+## Entities
 You can research the entities in the following order:
 
-#### Immovebles tracker
-Charts train-stops every 30 seconds. No need to place radars everywhere.
-
-This means: A train-stop is charted once every 30 seconds, then it keeps 10 seconds completly charted and 20 seconds in fog-of-war until it is re-charted. This is with default trains a good compromise.
-
-#### Movement tracker
+### Movement tracker
 Charts every vehicle (trains, cars, tank...).
 
 If vehicle is driving: Every 1/2 seconds and tries to look forward. (This is with the default vehicles good enough, but there might be problems with very fast vehicles)
 
 If it is waiting: Every 17.5 seconds (10 sconds visible, 7.5 in fog).
 
-#### Rotation tracker
+### Immovebles tracker
+Charts train-stops every 30 seconds. No need to place radars everywhere.
+
+This means: A train-stop is charted once every 30 seconds, then it keeps 10 seconds completly charted and 20 seconds in fog-of-war until it is re-charted. This is with default trains a good compromise.
+
+### Rotation tracker
 
 **THE ROTATION-TRACKER IS NOT READY YET (and might change name); you can research and build it, but the entity has currently no function!**
 When ready it should scan a very wide range (2000 tiles?) in "circle-segments", like real radars. Only chunks with owned entities on it.
 Takes some time for a rotation (a minute or two).
 
-#### Research
+### Research
 You need to research the different radar-tracker-technologies before you can built and place the radars.
 TODO: List needed items for research
 
-#### Crafting
+### Crafting
 TODO: List of needed items to built
 
-#### Energy Usage
+### Energy Usage
 TODO: (auto-generated) list of needed power
 
-## Remote Calls / Debug
+# Remote Calls / Debug
 Use /c remote.call('RT', 'help') to see all commands.
 TODO: Generate list
 
@@ -91,6 +103,14 @@ It was updated to v0.13 by Optera (in the same thread) and me.
 Meanwhile the only remainings are the graphics, prototypes and some lines of code about the prediction of train-direction.
 
 #Version history
+0.3.2 2016-11-06
+- Fixed: Debug-mode was initially on.
+- Change: Reversed research-order of movement- and immobile-tracker and other slight changes with research. Reversed graphics, too.
+
+0.3.1 2016-11-05
+- Added release script.
+- Second release on mods.factorio.com
+
 0.3.0 2016-10-31
 - Stabilized, immoveables and movement tracker now works reliable.
 - Debug-mode. I think the idea of the "debugger" is cool. It helped me a lot to find the bugs, to see, when an entity changed state.
@@ -118,11 +138,8 @@ TODO
 #Ideas/TODOs
 V0.3:
 - Playing for balancing.
-- Debug-mode after intialization/update off!
 - Make a 0.13 release, too.
-- Reverse research-order of movement- and immobile tracker! Movement: Research after car. Immobile: Research after train automation.
 - Add better description in research etc. into locale.
-- Sort trackers in own crafting-row.
 
 V0.4:
 - Take tracker-code out of control.lua and decrease complexity (nesting).
@@ -132,6 +149,7 @@ V0.4:
 - Track only front entity if train is running.
 - Don't track back entity if no reverse loco.
 - Look if _new chunk_ would be found and only then chart that chunk.
+- New graphics
 
 V0.x:
 - Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). Big change: This needs to introduce to bind entities to trackers.
@@ -139,8 +157,9 @@ V0.x:
 - Rotational-Tracker: Add a new radar-functionality, which scans 360˚ in a minute, but only those chunks, that have entities built on ground. Range depends only on power it can get.
 - Once-Tracker: Scans when entity is built/removed
 - Random-Tracker: Randomly scan minerals by revealing a similar "virtual" surface. Good to search for far away minerals without revealing current map.
-- A tool or so to add other immoveable entities to the immoveable-tracker.
+- Spy tracker: Let's reveal the other side. If other force comes too near it gets the chance to be "marked" and you can see it for some while even when not longer in range.
+- A tool or so to add entities to some of the trackers.
 - With more trackers: spread their scan-times so, that they do not chart all at once.
-- Upgrade functio   n to convert (several) the train-tracker radars to to radar-tracker (good learning subproject).
+- Upgrade function to convert (several) the train-tracker radars to to radar-tracker (good learning subproject).
 - Scanner-robots. You can send them out and they will automatically reveal map.
 - "Train Radar"  - some special type of locomotive/wagon. The train can be programmed to drive in circles to scan the area beside your rails in regular intervals, but needs excessive amounts of energy.

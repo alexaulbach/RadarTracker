@@ -10,7 +10,7 @@ data:extend({
         icon = "__" .. mod_name .. "__/graphics/airport-item.png",
         flags = {"goes-to-quickbar"},
         subgroup = "transport",
-        order = "a[vehicle-system]-h[vehicular-tracker]",
+        order = "a[radar-tracker]-b["..tracker_name.."]",
         place_result = tracker_name,
         stack_size = 5
     }
@@ -90,7 +90,7 @@ data:extend({
         name = tracker_name,
         icon = "__"..mod_name.."__/graphics/train-tracker-technology.png",
         icon_size = 128,
-        prerequisites = {"electric-energy-distribution-1"},
+        prerequisites = {"logistics-2"},
         effects =
         {
             {
@@ -100,7 +100,7 @@ data:extend({
         },
         unit =
         {
-            count = 100,
+            count = 200,
             ingredients =
             {
                 {"science-pack-1", 2},

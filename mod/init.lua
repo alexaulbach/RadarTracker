@@ -13,7 +13,10 @@ Init.init = function()
     end
 
     log("[RT] ----------------- INIT --------------------------")
+
     global.movement_tracker_count = 0
+    global.debugger = false
+
     Init.initData()
     
     for entityType, mappedName in pairs(RTDEF.managers) do

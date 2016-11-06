@@ -1,6 +1,8 @@
 
 function prnt_n_log(str)
-    game.print(str)
+    if global.debugger then
+        game.print(str)
+    end
     log("[TR] " .. str)
 end
 
@@ -18,7 +20,7 @@ end
 
 --- debugger class
 
-global.debugger = global.debugger or true
+global.debugger = global.debugger or false
 
 dbg = {}
 
@@ -41,7 +43,7 @@ end
 dbg._charting = function(surface, area, unit_number)
     for _, i in pairs({'left_top', 'right_bottom'}) do
         for _, j in pairs({'left_top', 'right_bottom'}) do
-            local pos = {area[i].x, area[j].y}
+            local pos = {area[i].x-2, area[j].y}
             surface.create_entity({ name = "flying-text-chartedges", position = pos, text = unit_number})
         end
     end
@@ -63,7 +65,7 @@ end
 
 --- exchanges all functions without "_" with the same parallel-function with "_"
 function __switchDebug()
-    log("[RT] SwitchDebug from " .. tostring(dbg.mode()) .. " to  " .. tostring(dbg._mode()))
+    log("[RT] SwitchDebug from " .. tostring(dbg.mode()) .. " to " .. tostring(dbg._mode()))
     for funcName, func in pairs(dbg) do
         if (string.sub(funcName, 0, 1) ~= "_") then
             local funcName2 = "_" .. funcName
@@ -71,6 +73,7 @@ function __switchDebug()
             dbg[funcName2] = func
         end
     end
+    global.debugger = dbg.mode()
 end
 
 if global.debugger ~= dbg.mode() then
