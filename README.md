@@ -5,8 +5,7 @@ This is a Factorio mod. It adds a new types of "trackers", which can track **tra
 This mod is for bigger factories, that already covers a wide area and a bigger train-network.
 But it is also useful for exploration by car/tank.
 
-Radar-tracker tries to let you keep track of your factory: It triggers _charting_ (actualization of the map)
-only for the "most important" things, like
+Radar-tracker tries to let you keep track of your factory: It triggers _charting_ (actualization of the map) only for the "most important" things, like
 - train-stops (immoveables)
 - trains, cars and tanks (movement)
 
@@ -15,18 +14,15 @@ Charting is the action, when a radar scans a chunk. Only whole chunks (32x32 til
 
 Once a chunk is charted, it keeps up-to-date for **10 seconds** (this is default game-mechanics).
 Within that time the piece of map for this chunk is updated for every tick.
-You can see that cleary when you look on the map and a chunk suddenly is highlighted and then gets darker and darker
-until it is the same color as the other uncharted chunks.
-In other words: 10 seconds after the last chart of a chunk the map of this chunk falls back into the "fog of war": The map is not re-charted
-and what you see on map might be outdated.
+You can see that cleary when you look on the map and a chunk suddenly is highlighted and then gets darker and darker until it is the same color as the other uncharted chunks.
+In other words: 10 seconds after the last chart of a chunk the map of this chunk falls back into the "fog of war": The map is not re-charted and what you see on map might be outdated.
 
 This means: The default radar charts an area of 100x100 tiles every tick (100x100 means the chunks,
 that are "touched" by this area will be charted).
  
 **This is an CPU-expensive operation if you place many radars!**
 
-So for very big factories it is a good idea to reduce the number of radars. But with growing factory you just
-need the overview!
+So for very big factories it is a good idea to reduce the number of radars. But with growing factory you just need the overview!
 
 ### Goals
 This mod tries to achieve this goals:
@@ -43,8 +39,7 @@ You can research the entities in the following order:
 #### Immovebles tracker
 Charts train-stops every 30 seconds. No need to place radars everywhere.
 
-This means: A train-stop is charted once every 30 seconds, then it keeps 10 seconds completly charted
-and 20 seconds in fog-of-war until it is re-charted. This is with default trains a good compromise.
+This means: A train-stop is charted once every 30 seconds, then it keeps 10 seconds completly charted and 20 seconds in fog-of-war until it is re-charted. This is with default trains a good compromise.
 
 #### Movement tracker
 Charts every vehicle (trains, cars, tank...).
@@ -69,7 +64,7 @@ TODO: List of needed items to built
 #### Energy Usage
 TODO: (auto-generated) list of needed power
 
-## Remote Calls
+## Remote Calls / Debug
 Use /c remote.call('RT', 'help') to see all commands.
 TODO: Generate list
 
@@ -121,7 +116,15 @@ https://github.com/alexaulbach/RadarTracker
 TODO
 
 #Ideas/TODOs
+V0.3:
+- Playing for balancing.
+- Debug-mode after intialization/update off!
+- Make a 0.13 release, too.
+- Reverse research-order of movement- and immobile tracker! Movement: Research after car. Immobile: Research after train automation.
 - Add better description in research etc. into locale.
+- Sort trackers in own crafting-row.
+
+V0.4:
 - Take tracker-code out of control.lua and decrease complexity (nesting).
 - Tracker should not calculate entity-status (managers job).
 - Debugger should calculate output-string itself for speed reasons.
@@ -129,6 +132,8 @@ TODO
 - Track only front entity if train is running.
 - Don't track back entity if no reverse loco.
 - Look if _new chunk_ would be found and only then chart that chunk.
+
+V0.x:
 - Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). Big change: This needs to introduce to bind entities to trackers.
 - The more trains a tracker needs to scan then, the slower it will refresh. Or the more energy it takes?
 - Rotational-Tracker: Add a new radar-functionality, which scans 360˚ in a minute, but only those chunks, that have entities built on ground. Range depends only on power it can get.
