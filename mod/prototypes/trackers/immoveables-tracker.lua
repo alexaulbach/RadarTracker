@@ -7,7 +7,7 @@ data:extend({
     {
         type = "item",
         name = tracker_name,
-        icon = "__" .. mod_name .. "__/graphics/airport-item.png",
+        icon = "__"..mod_name.."__/graphics/ImmoTracker-item.png",
         flags = {"goes-to-quickbar"},
         subgroup = "transport",
         order = "a[radar-tracker]-b["..tracker_name.."]",
@@ -20,7 +20,7 @@ data:extend({
     {
         type = "radar",
         name = tracker_name,
-        icon =  "__" .. mod_name .. "__/graphics/airport-item.png",
+        icon =  "__"..mod_name.."__/graphics/ImmoTracker-item.png",
         flags = {"placeable-player", "player-creation"},
         minable = {hardness = 0.2, mining_time = 1.5, result = tracker_name},
         max_health = 500,
@@ -46,14 +46,14 @@ data:extend({
         energy_usage = _c.energy_usage .. "kW",
         pictures =
         {
-            filename = "__" .. mod_name .. "__/graphics/airport-entity.png",
+            filename = "__"..mod_name.."__/graphics/ImmoTracker-entity.png",
             priority = "low",
-            width = 270,
-            height = 371, 
+            width = 195,
+            height = 232,
             apply_projection = false,
             direction_count = 1,
             line_length = 1,
-            shift = {0.0, -2.8 } 
+            shift = {0.0, -1.0}
         },
         vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
         working_sound =

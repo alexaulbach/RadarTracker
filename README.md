@@ -1,9 +1,11 @@
 # RadarTracker
 A Factorio mod, that adds "trackers", which can track **trains, cars, tanks (any vehicle-type) and immoveables like train-stops**..
 
+Graphics: For Immoveables-Tracker: YuokiTani. Thanks to him.
+
 # Description
 Radar-tracker tries to let you keep track of your factory: It triggers _charting_ (actualization of the map) only for the "most important" things.
-- The Movement-tracker tracks *vehicles* (trains, cars and tanks):
+- The Movement-tracker tracks *vehicles* (trains, cars, tanks):
   - Technique can be researched with Logistics-2.
   - Moving vehicles will be charted every 0.5 seconds, and the radars scans into the forward-direction.
   - Waiting vehicles will be charted every 17.5 seconds.
@@ -13,7 +15,7 @@ Radar-tracker tries to let you keep track of your factory: It triggers _charting
 This mod is for bigger factories, that already covers a wide area and a bigger train-network.
 But it is also useful for exploration by car/tank.
 
-## About Charting (technical)
+## About Charting (technical) and why it is bad for game-performance
 Charting is the action, when a radar scans a chunk. Only whole chunks (32x32 tiles) can be charted.
 
 Once a chunk is charted, it keeps up-to-date for **10 seconds** (this is default game-mechanics).
@@ -25,6 +27,8 @@ This means: The default radar charts an area of 100x100 tiles every tick (100x10
 that are "touched" by this area will be charted).
  
 **This is an CPU-expensive operation if you place many radars!**
+
+Much more expensive are radars (from other mods), that chart a wider area: An area of 200x200 is 4 times larger, than 100x100. Not 2.
 
 So for very big factories it is a good idea to reduce the number of radars. But with growing factory you just need the overview!
 
@@ -103,6 +107,10 @@ It was updated to v0.13 by Optera (in the same thread) and me.
 Meanwhile the only remainings are the graphics, prototypes and some lines of code about the prediction of train-direction.
 
 #Version history
+0.3.3 2016-11-21
+- New Icon from movement tracker, thanks to YuokiTani.
+- Fix small bug with initialization of debugger.
+
 0.3.2 2016-11-06
 - Fixed: Debug-mode was initially on.
 - Change: Reversed research-order of movement- and immobile-tracker and other slight changes with research. Reversed graphics, too.
@@ -137,9 +145,10 @@ TODO
 
 #Ideas/TODOs
 V0.3:
+- Add LICENSE
 - Playing for balancing.
-- Make a 0.13 release, too.
 - Add better description in research etc. into locale.
+- Make code nice.
 
 V0.4:
 - Take tracker-code out of control.lua and decrease complexity (nesting).

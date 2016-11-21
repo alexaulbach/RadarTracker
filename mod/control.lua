@@ -195,7 +195,7 @@ script.on_event(defines.events.on_player_driving_changed_state, function(event)
 end)
 
 
-remote.add_interface("tr",
+remote.add_interface("RTR",
 	{
 		help = function()
 			game.player.print("-----  RadarTracker: Remote functions  -----")
@@ -242,9 +242,8 @@ remote.add_interface("tr",
 		end,
 		
 		debug = function()
-			global.debugger = not global.debugger
 			__switchDebug()
-			game.player.print("[RT] Debugging: " .. inspect(global.debugger))
+			game.player.print("[RT] Debugging: " .. tostring(global.debugger))
 		end,
 	}
 )
