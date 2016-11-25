@@ -87,7 +87,7 @@ TODO: Generate list
 # Features:
 - This is my first Factorio mod, I appreciate positive and negative critics.
 - Fast initialization: Initial scan of a 20,000 tiles-map in under 10 seconds (vs. half an hour). 
-- Tracks only first and last unit of a train instead of the whole train. (Imporovement is planned, see ideas)
+- Tracks only first and last unit of a train instead of the whole train. (Improvement is planned, see ideas)
 - CPU-save: For 300 trains (600 entities) only 3-6 updates per second slower. (Well, still too slow)
 - Debug-mode. Useful and interesting...
 - Configuration file for energy-usages etc.
@@ -154,6 +154,7 @@ V0.4:
 - Take tracker-code out of control.lua and decrease complexity (nesting).
 - Tracker should not calculate entity-status (managers job).
 - Debugger should calculate output-string itself for speed reasons.
+- The whole debugger functionality is questionable.
 - Remote function for adding/deleting entities to/from list. Own file.
 - Track only front entity if train is running.
 - Don't track back entity if no reverse loco.
