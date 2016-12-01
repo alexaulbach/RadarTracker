@@ -7,7 +7,7 @@ data:extend({
     {
         type = "item",
         name = tracker_name,
-        icon = "__"..mod_name.."__/graphics/radar_ssilk_4_0001.png",
+        icon = "__"..mod_name.."__/graphics/radar_ssilk_3_0001.png",
         flags = {"goes-to-quickbar"},
         subgroup = "transport",
         order = "a[radar-tracker]-c["..tracker_name.."]",
@@ -20,7 +20,7 @@ data:extend({
     {
         type = "radar",
         name = tracker_name,
-        icon =  "__"..mod_name.."__/graphics/radar_ssilk_4_0001.png",
+        icon =  "__"..mod_name.."__/graphics/radar_ssilk_3_0001.png",
         flags = {"placeable-player", "player-creation"},
         minable = {hardness = 0.2, mining_time = 1.5, result = tracker_name},
         max_health = 500,
@@ -46,10 +46,10 @@ data:extend({
         energy_usage = _c.energy_usage .. "kW",
         pictures =
         {
-            filename = "__"..mod_name.."__/graphics/radar_ssilk_4_sheet.png",
+            filename = "__"..mod_name.."__/graphics/radar_ssilk_3_sheet.png",
             priority = "low",
-            width = 128,
-            height = 128,
+            width = 160,
+            height = 160,
             apply_projection = false,
             direction_count = 64,
             line_length = 8,

@@ -16,6 +16,8 @@ Init.init = function()
 
     global.movement_tracker_count = 0
     global.debugger = false
+    global.spiral_iterators = {}
+    
 
     Init.initData()
     

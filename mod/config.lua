@@ -16,7 +16,13 @@ _config = {
     ["rotational-tracker"]  = {
         ["energy_usage"]    = 1000.0, -- kilo Watt
         ["refresh_time"]    = 2.0,    -- seconds
-        ["segment_per_refresh"] = 0.26179938779915 -- in rad (0.26179938779915 rad ~ 12 degrees)
+        ["segment_per_refresh"] = 0.26179938779915, -- in rad (0.26179938779915 rad ~ 12 degrees)
+        ["scanned_radius"]  = 2000.0,   -- radius scanned around the entity
+    },
+    ["once-tracker"]  = {
+        ["energy_usage"]    = 1000.0, -- kilo Watt
+        ["refresh_time"]    = 2.0,    -- seconds
+        ["scanned_radius"]  = 2000.0,   -- radius scanned around the entity
     }
 }
 
