@@ -1,7 +1,7 @@
 # RadarTracker
 A Factorio mod, that adds "trackers", which can track **trains, cars, tanks (any vehicle-type) and immoveables like train-stops**..
 
-Graphics: For Immoveables-Tracker: YuokiTani. Thanks to him.
+Graphics: Trackers by YuokiTani. Thanks to him.
 
 # Description
 Radar-tracker tries to let you keep track of your factory: It triggers _charting_ (actualization of the map) only for the "most important" things.
@@ -107,6 +107,9 @@ It was updated to v0.13 by Optera (in the same thread) and me.
 Meanwhile the only remainings are the graphics, prototypes and some lines of code about the prediction of train-direction.
 
 #Version history
+0.3.4 2016-11-21
+- New Icons for other trackers, thanks to YuokiTani.
+
 0.3.3 2016-11-21
 - New Icon from movement tracker, thanks to YuokiTani.
 - Fix small bug with initialization of debugger.
@@ -159,7 +162,6 @@ V0.4:
 - Track only front entity if train is running.
 - Don't track back entity if no reverse loco.
 - Look if _new chunk_ would be found and only then chart that chunk.
-- New graphics
 
 V0.x:
 - Tracker can scan only vehicles in range (I think to 2500 tiles radius, which is quite big). Big change: This needs to introduce to bind entities to trackers.
