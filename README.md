@@ -148,7 +148,8 @@ TODO
 
 #Ideas/TODOs
 V0.3:
-- Add LICENSE
+- add similar log-level handling as in LogsticTrainNetwork.
+- Add LICENSE.
 - Playing for balancing.
 - Add better description in research etc. into locale.
 - Make code nice.
