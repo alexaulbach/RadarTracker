@@ -1,7 +1,7 @@
 -- Changes on this vars needs a reload of Factorio
 
 _config = {
-    ["movement-tracker"]   = {
+    ["movement-tracker"] = {
         ["energy_usage"]   = 10000.0, -- kilo Watt
         ["refresh_time"]   = 0.5,     -- seconds
         ["scanned_radius"] = 5.0,     -- radius scanned around the entity
@@ -13,13 +13,13 @@ _config = {
         ["refresh_time"]    = 30.0,   -- seconds
         ["scanned_radius"]  = 7.0,    -- radius scanned around the entity
     },
-    ["rotational-tracker"]  = {
+    ["rotational-tracker"] = {
         ["energy_usage"]    = 1000.0, -- kilo Watt
         ["refresh_time"]    = 2.0,    -- seconds
         ["segment_per_refresh"] = 0.26179938779915, -- in rad (0.26179938779915 rad ~ 12 degrees)
         ["scanned_radius"]  = 2000.0,   -- radius scanned around the entity
     },
-    ["once-tracker"]  = {
+    ["change-tracker"] = {
         ["energy_usage"]    = 1000.0, -- kilo Watt
         ["refresh_time"]    = 2.0,    -- seconds
         ["scanned_radius"]  = 2000.0,   -- radius scanned around the entity

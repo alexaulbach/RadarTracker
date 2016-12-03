@@ -14,13 +14,13 @@ require 'dbg'
 
 RTDEF = {
 	tracker = {
-		none    = 1,    -- no scan
-		running = 2,    -- movement-tracker   ; vehicles with speed ~= 0, nearly every 0.5 seconds
-		waiting = 3,    -- wait-tracker   ; vehicles with speed == 0, every 10 seconds
-		unmoved = 4,    -- immoveable-tracker ; static stuff, every 30 seconds
-		rotating= 5,    -- rotational-tracker ; chunks that should be scanned rotational, every minute
-		once    = 6,    -- scanning once like some kind of rocket or when a robot places/removes an entity
-		random  = 7,    -- scanning randomly, like construction bots?
+		none     = 1,    -- no scan
+		running  = 2,    -- movement-tracker   ; vehicles with speed ~= 0, nearly every 0.5 seconds
+		waiting  = 3,    -- wait-tracker   ; vehicles with speed == 0, every 10 seconds
+		unmoved  = 4,    -- immoveable-tracker ; static stuff, every 30 seconds
+		rotating = 5,    -- rotational-tracker ; chunks that should be scanned rotational, every minute
+		change   = 6,    -- scanning changes, when a robot places/removes an entity. Or special scanning rockets?
+		random   = 7,    -- scanning randomly, like construction bots?
 	},
 	managers = {
 		["train-stop"]  = "stops",

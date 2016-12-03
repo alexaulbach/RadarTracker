@@ -7,7 +7,7 @@ data:extend({
     {
         type = "item",
         name = tracker_name,
-        icon = "__"..mod_name.."__/graphics/radar_ssilk_4_0001.png",
+        icon = "__"..mod_name.."__/graphics/radar_ssilk_4_icon.png",
         flags = {"goes-to-quickbar"},
         subgroup = "transport",
         order = "a[radar-tracker]-c["..tracker_name.."]",
@@ -20,7 +20,7 @@ data:extend({
     {
         type = "radar",
         name = tracker_name,
-        icon =  "__"..mod_name.."__/graphics/radar_ssilk_4_0001.png",
+        icon =  "__"..mod_name.."__/graphics/radar_ssilk_4_icon.png",
         flags = {"placeable-player", "player-creation"},
         minable = {hardness = 0.2, mining_time = 1.5, result = tracker_name},
         max_health = 500,
@@ -32,8 +32,8 @@ data:extend({
                 percent = 70
             }
         },
-        collision_box = {{-0.80, -0.50}, {0.80, 0.50}},
-        selection_box = {{-1, -1}, {1, 1}},
+        collision_box = {{-1.0, -1.0}, {1.0, 1.0}},
+        selection_box = {{-1.1, -1.1}, {1.1, 1.1}},
         energy_per_sector = _c.energy_per_sector .. "kJ",
         max_distance_of_sector_revealed = 0,
         max_distance_of_nearby_sector_revealed = 0,
@@ -53,7 +53,7 @@ data:extend({
             apply_projection = false,
             direction_count = 64,
             line_length = 8,
-            shift = {1.1375, -0.34375}
+            shift = {0.9, -1.0}
         },
         vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
         working_sound =

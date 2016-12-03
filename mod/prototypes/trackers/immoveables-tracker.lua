@@ -32,8 +32,8 @@ data:extend({
                 percent = 70
             }
         },
-        collision_box = {{-0.80, -0.80}, {0.80, 0.80}},
-        selection_box = {{-1, -1}, {1, 1}},
+        collision_box = {{-0.50, -0.50}, {0.50, 0.50}},
+        selection_box = {{-0.7, -0.7}, {0.7, 0.7}},
         energy_per_sector = _c.energy_per_sector .. "kJ",
         max_distance_of_sector_revealed = 0,
         max_distance_of_nearby_sector_revealed = 0,
@@ -53,7 +53,7 @@ data:extend({
             apply_projection = false,
             direction_count = 64,
             line_length = 8,
-            shift = {0.0, -1.0}
+            shift = {1.45, -1.60}
         },
         vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
         working_sound =
