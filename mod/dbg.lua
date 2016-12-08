@@ -1,32 +1,24 @@
-
-function prnt_n_log(str)
-    if global.debugger then
-        game.print(str)
-    end
-    log("[TR] " .. str)
-end
-
-function prnt_ntt(ntt, unit_number, force_name)
-    if unit_number == nil then
-        unit_number = ntt.entity.unit_number
-    end
-    if force_name == nil then
-        force_name = ntt.entity.force.name
-    end
-
-    local str = "UN: " .. unit_number .. " FN: " .. force_name .. "TRK: " .. ntt.tracker .. " MNGR: " .. ntt.manager
-    prnt_n_log(str)
-end
-
---- debugger class
+--- Debugger
+--
+-- This is very special and it needs a bit discipline to use it correct, so read carefully!
+-- 
+-- Debugger is turned on/off via remote function
+-- Example:
+-- remote.add_interface("LogTrains", 
+--                      { debug = function() __switchDebug() end })
+-- The __switchDebug() exchanges the functions the dbg-class: All functions without _ are exchanged. See down!
 
 global.debugger = global.debugger or false
 
-dbg = {}
+------------------------------------------------------------------------------
+--- debugger class
+------------------------------------------------------------------------------
 
+dbg = {}
 
 -------------------------------
 
+-- returns status of debugger, do not change!
 dbg.mode = function()
     return false
 end
@@ -37,35 +29,23 @@ end
 
 -------------------------------
 
-dbg.charting = function(surface, area, unit_number)
+dbg.print = function(str)
 end
 
-dbg._charting = function(surface, area, unit_number)
-    for _, i in pairs({'left_top', 'right_bottom'}) do
-        for _, j in pairs({'left_top', 'right_bottom'}) do
-            local pos = {area[i].x-2, area[j].y}
-            surface.create_entity({ name = "flying-text-chartedges", position = pos, text = unit_number})
-        end
-    end
+dbg._print = function(str)
+    printmsg(str)
 end
 
 -------------------------------
 
-dbg.ftext = function(surface, pos, text, offset)
-end
+-- load own debug-functions
+require "dbg_funcs"
 
-dbg._ftext = function(surface, pos, text, offset)
-    if offset ~= nil then
-        pos.y = pos.y + offset
-    end
-    surface.create_entity({ name = "flying-text", position = pos, text = text})
-end
-
--------------------------------
-
+------------------------------------------------------------------------------
 --- exchanges all functions without "_" with the same parallel-function with "_"
+------------------------------------------------------------------------------
 function __switchDebug()
-    log("[RT] SwitchDebug from " .. tostring(dbg.mode()) .. " to " .. tostring(dbg._mode()))
+    game.print("[RTR] SwitchDebug from " .. tostring(dbg.mode()) .. " to " .. tostring(dbg._mode()))
     for funcName, func in pairs(dbg) do
         if (string.sub(funcName, 0, 1) ~= "_") then
             local funcName2 = "_" .. funcName

@@ -6,10 +6,14 @@ require 'stdlib.surface'
 inspect = require('inspect')
 
 require 'config'
+require 'basics'
 require 'init'
 require 'container'
 require 'manager'
+require 'interface'
 require 'dbg'
+
+interface.initAllRemoteCalls()
 
 
 RTDEF = {
@@ -44,21 +48,21 @@ stateComp = {
 ---------------------------------------------------------------------------------------------------
 
 script.on_load(function()
-	log("[RT] ----------------- on_load: do nothing--------------------------")
+	log("[RTR] ----------------- on_load: do nothing--------------------------")
 end)
 
 script.on_init(function()
-	log("[RT] ----------------- on_init--------------------------")
+	log("[RTR] ----------------- on_init--------------------------")
 	Init.init()
 end)
 
 script.on_configuration_changed(function(event)
-	log("[RT] ----------------- on_configuration_changed--------------------------")
+	log("[RTR] ----------------- on_configuration_changed--------------------------")
 	Init.init()
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-	log("[RT] ----------------- on_force_created--------------------------")
+	log("[RTR] ----------------- on_force_created--------------------------")
 	Init.clearInitialization()
 	Init.init()
 end)
@@ -67,7 +71,7 @@ script.on_event(defines.events.on_built_entity, function(event)
 	local entity = event.created_entity
 	local mngr = RTDEF.managers[entity.type]
 	if mngr then
-		log("[RT] built entity: " .. entity.unit_number .. " manager " .. mngr)
+		log("[RTR] built entity: " .. entity.unit_number .. " manager " .. mngr)
 		manager.add(entity, mngr)
 	end
 end)
@@ -173,7 +177,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 		end
 	elseif radar.name == "rotational-tracker" then
 		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.rotating, radar.force.name)) do
-			log("[RT] rotational; " .. unit_number .. " ntt " .. ntt.entity.name)
+			log("[RTR] rotational; " .. unit_number .. " ntt " .. ntt.entity.name)
 		end
 	end
 end)
@@ -193,57 +197,3 @@ script.on_event(defines.events.on_player_driving_changed_state, function(event)
 	-- todo: need to watch for force?? Mabe in that case the entity is added to the own force-radars instead of vehicles?
 	manager.add(player.vehicle)
 end)
-
-
-remote.add_interface("RTR",
-	{
-		help = function()
-			game.player.print("-----  RadarTracker: Remote functions  -----")
-			game.player.print("|  help()  - This help")
-			game.player.print("|  list()  - Show all currently tracked objects (ordered by force and tracker)")
-			game.player.print("|  show()  - Show tracker entry of hovered entity (Only if tracked!)")
-			game.player.print("|  init()  - (Re-)initialize everything")
-			game.player.print("|  debug() - switch debug-functionality on/off")
-			game.player.print("")
-		end,
-		
-		list = function()
-			for fn, trackers in pairs(global._ntttrkr) do
-				prnt_n_log("--------- " .. fn .. " ---------")
-				for tracker, units in pairs(trackers) do
-					prnt_n_log("---- " .. tracker)
-					for unit_number, ntt in pairs(units) do
-						prnt_ntt(ntt, unit_number, fn) 
-					end
-				end
-			end
-		end, 
-		
-		show = function()
-			entity = game.player.selected
-			local unit_number
-			if entity.type == 'train' then
-				unit_number = entity.train.back_stock.unit_number
-			else
-				unit_number = entity.unit_number
-			end
-			local ntt = container.get(unit_number)
-			if ntt then
-				prnt_ntt(ntt, unit_number)
-				if ntt.entity.unit_number ~= unit_number then
-					prnt_n_log("UNIT NUMBER NOT EQUAL!")
-				end
-			end
-		end,
-
-		init = function()
-			Init.clearInitialization()
-			Init.init()
-		end,
-		
-		debug = function()
-			__switchDebug()
-			game.player.print("[RT] Debugging: " .. tostring(global.debugger))
-		end,
-	}
-)

@@ -8,16 +8,16 @@ Init.in_load = false
 
 Init.init = function()
     if Init.initialized then
-        log("[RT] already initialized")
+        log("[RTR] already initialized")
         return
     end
 
-    log("[RT] ----------------- INIT --------------------------")
+    log("[RTR] ----------------- INIT --------------------------")
 
     global.movement_tracker_count = 0
     global.debugger = false
-    global.spiral_iterators = {}
-    
+    global.log_level = global.log_level or 2           -- 4: everything, 3: scheduler messages, 2: basic messages, 1 errors only, 0: off
+    global.log_output = global.log_output or "console" -- console or log or both
 
     Init.initData()
     
@@ -34,7 +34,7 @@ Init.type = function(entityType, mappedName)
         return
     end
 
-    log("[RT] ------ init " .. mappedName .. " -> count " .. entityType .. ": ".. count)
+    log("[RTR] ------ init " .. mappedName .. " -> count " .. entityType .. ": ".. count)
 
     local entities = Surface.find_all_entities({
         type = entityType
@@ -43,7 +43,7 @@ Init.type = function(entityType, mappedName)
     for _, entity in pairs(entities) do
         local force_name = entity.force.name
         manager.add(entity, mappedName) 
-        log("[RT] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
+        log("[RTR] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
     end
 end
 
@@ -71,10 +71,10 @@ Init.initData = function()
     end
     
     if not Init.on_load then
-        log("[RT] initData")
+        log("[RTR] initData")
         container.init()
         Init.initializedData = true
     else
-        log("[RT] Not initData cause in on_load")
+        log("[RTR] Not initData cause in on_load")
     end
 end

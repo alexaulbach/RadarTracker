@@ -14,7 +14,7 @@ container.set = function(ntt)
                 container.drop_link(prevntt)
             end
         end
-        log("[RT] Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
+        log("[RTR] Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
         dbg.ftext(ntt.entity.surface, ntt.entity.position, "ADD " .. ntt.tracker .. " "..ntt.manager .. unit_number)
         ntt.force_name   = fn
         ntt.unit_number  = unit_number
@@ -22,7 +22,7 @@ container.set = function(ntt)
         global._ntt[unit_number] = ntt
         global._ntttrkr[fn][ntt.tracker][unit_number] = ntt
     else
-        log("[RT] ERROR already invalid, unit_number: " .. unit_number)
+        log("[RTR] ERROR already invalid, unit_number: " .. unit_number)
     end
 end
 
@@ -47,7 +47,7 @@ container.drop_link = function(ntt)
     local fn = ntt.force_name
     local unit_number = ntt.unit_number
     global._ntttrkr[fn][ntt.prev.tracker][unit_number] = nil
-    log("[RT] drop_link " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.prev.tracker .. " manager " .. ntt.manager)
+    log("[RTR] drop_link " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.prev.tracker .. " manager " .. ntt.manager)
     dbg.ftext(ntt.entity.surface, ntt.entity.position, "DRP " .. ntt.prev.tracker .. " "..ntt.manager .. " " .. unit_number, 1)
 end
 
