@@ -48,21 +48,21 @@ stateComp = {
 ---------------------------------------------------------------------------------------------------
 
 script.on_load(function()
-	log("[RTR] ----------------- on_load: do nothing--------------------------")
+	-- if global.log_level > 0 then printmsg("----------------- on_load: do nothing--------------------------") end
 end)
 
 script.on_init(function()
-	log("[RTR] ----------------- on_init--------------------------")
+	-- if global.log_level > 0 then printmsg("----------------- on_init--------------------------") end
 	Init.init()
 end)
 
 script.on_configuration_changed(function(event)
-	log("[RTR] ----------------- on_configuration_changed--------------------------")
+	-- if global.log_level > 0 then printmsg("----------------- on_configuration_changed--------------------------") end
 	Init.init()
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-	log("[RTR] ----------------- on_force_created--------------------------")
+	-- if global.log_level > 0 then printmsg("----------------- on_force_created--------------------------") end
 	Init.clearInitialization()
 	Init.init()
 end)
@@ -71,7 +71,7 @@ script.on_event(defines.events.on_built_entity, function(event)
 	local entity = event.created_entity
 	local mngr = RTDEF.managers[entity.type]
 	if mngr then
-		log("[RTR] built entity: " .. entity.unit_number .. " manager " .. mngr)
+		if global.log_level > 2 then printmsg("built entity: " .. entity.unit_number .. " manager " .. mngr) end
 		manager.add(entity, mngr)
 	end
 end)
@@ -177,7 +177,7 @@ script.on_event(defines.events.on_sector_scanned, function(event)
 		end
 	elseif radar.name == "rotational-tracker" then
 		for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.rotating, radar.force.name)) do
-			log("[RTR] rotational; " .. unit_number .. " ntt " .. ntt.entity.name)
+			if global.log_level > 2 then printmsg("rotational; " .. unit_number .. " ntt " .. ntt.entity.name) end
 		end
 	end
 end)

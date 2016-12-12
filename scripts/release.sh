@@ -42,6 +42,7 @@ echo "Target-Zip: $targetZip"
 cd "$sourceDir"
 git archive --prefix="$fullName/" HEAD:mod | tar -C "$tmpdir" -xf -
 cp README.md "$tmpdir/$fullName"
+cp Changelog "$tmpdir/$fullName"
 cd "$currentDir"
 
 

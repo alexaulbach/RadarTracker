@@ -7,13 +7,13 @@ for tracker, conf in pairs(_config) do
         conf.energy_per_sector = conf.energy_usage * conf.refresh_time -- kilo Joule
     end
 
-    log("[RTR] ______ Tracker " .. tracker .. " ______")
+    -- log("______ Tracker " .. tracker .. " ______")
     
     local str = ""
     for name, value in pairs(conf) do
         str = str .. " - " .. name .. ": " .. value
     end
-    log("[RTR] " .. str)
+    -- log(str)
 end
 
 require("prototypes.radar-tracker")

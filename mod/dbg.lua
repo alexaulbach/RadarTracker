@@ -38,14 +38,14 @@ end
 
 -------------------------------
 
--- load own debug-functions
 require "dbg_funcs"
+require "dbg_interface"
 
 ------------------------------------------------------------------------------
 --- exchanges all functions without "_" with the same parallel-function with "_"
 ------------------------------------------------------------------------------
 function __switchDebug()
-    game.print("[RTR] SwitchDebug from " .. tostring(dbg.mode()) .. " to " .. tostring(dbg._mode()))
+    printmsg("SwitchDebug from " .. tostring(dbg.mode()) .. " to " .. tostring(dbg._mode()))
     for funcName, func in pairs(dbg) do
         if (string.sub(funcName, 0, 1) ~= "_") then
             local funcName2 = "_" .. funcName
@@ -56,6 +56,3 @@ function __switchDebug()
     global.debugger = dbg.mode()
 end
 
-if global.debugger ~= dbg.mode() then
-    __switchDebug()
-end

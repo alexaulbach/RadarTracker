@@ -8,17 +8,22 @@ Init.in_load = false
 
 Init.init = function()
     if Init.initialized then
-        log("[RTR] already initialized")
+        printmsg("already initialized")
         return
     end
 
-    log("[RTR] ----------------- INIT --------------------------")
+    -- if global.log_level > 0 then printmsg("----------------- INIT --------------------------") end
 
+    -- todo a tracker count for each tracker
     global.movement_tracker_count = 0
+
     global.debugger = false
+    if global.debugger ~= dbg.mode() then
+        __switchDebug()
+    end
 
     -- 4: everything, 3: scheduler messages, 2: basic messages, 1 errors only, 0: off
-    interface.log_level.func(global.log_level or 2)
+    interface.log_level.func(global.log_level or 1)
     -- "console" or "log" or "console,log"
     interface.log_output.func('console')
 
@@ -37,7 +42,7 @@ Init.type = function(entityType, mappedName)
         return
     end
 
-    log("[RTR] ------ init " .. mappedName .. " -> count " .. entityType .. ": ".. count)
+    if global.log_level > 1 then printmsg("------ init " .. mappedName .. " -> count " .. entityType .. ": ".. count) end
 
     local entities = Surface.find_all_entities({
         type = entityType
@@ -45,8 +50,8 @@ Init.type = function(entityType, mappedName)
 
     for _, entity in pairs(entities) do
         local force_name = entity.force.name
-        manager.add(entity, mappedName) 
-        log("[RTR] added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName)
+        manager.add(entity, mappedName)
+        if global.log_level > 1 then printmsg("added: " .. entity.name .. " /force " .. force_name .. " to " .. mappedName) end
     end
 end
 
@@ -74,10 +79,10 @@ Init.initData = function()
     end
     
     if not Init.on_load then
-        log("[RTR] initData")
+        if global.log_level > 1 then printmsg("initData") end
         container.init()
         Init.initializedData = true
     else
-        log("[RTR] Not initData cause in on_load")
+        if global.log_level > 1  then printmsg("Not initData cause in on_load") end
     end
 end
