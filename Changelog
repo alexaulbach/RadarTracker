@@ -1,6 +1,7 @@
 
 #Version history
 0.3.5 2016-12-12
+- Fixed log-spam.
 - Rewrote debugger and interface-code. Interface can now be configured module-wise.
 
 0.3.4 2016-11-21
