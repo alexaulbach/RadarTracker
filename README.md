@@ -26,7 +26,7 @@ In other words: 10 seconds after the last chart of a chunk the map of this chunk
 This means: The default radar charts an area of 100x100 tiles every tick (100x100 means the chunks,
 that are "touched" by this area will be charted).
  
-**This is an CPU-expensive operation if you place many radars!**
+**This is an CPU-expensive operation if you place many radars (many hundreds of chunks)!**
 
 Much more expensive are radars (from other mods), that chart a wider area: An area of 200x200 is 4 times larger, than 100x100. Not 2.
 
@@ -115,11 +115,11 @@ TODO
 
 #Ideas/TODOs
 V0.3:
-- add similar log-level handling as in LogsticTrainNetwork.
+- add roboports to immoveables tracker
+- configurable scanned_radius for each entity-type.
 - Add LICENSE.
 - Playing for balancing.
-- Add better description in research etc. into locale.
-- Make code nice.
+- Make code nice. More clear modules...
 
 V0.4:
 - Take tracker-code out of control.lua and decrease complexity (nesting).
