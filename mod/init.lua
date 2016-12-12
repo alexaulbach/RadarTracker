@@ -16,8 +16,11 @@ Init.init = function()
 
     global.movement_tracker_count = 0
     global.debugger = false
-    global.log_level = global.log_level or 2           -- 4: everything, 3: scheduler messages, 2: basic messages, 1 errors only, 0: off
-    global.log_output = global.log_output or "console" -- console or log or both
+
+    -- 4: everything, 3: scheduler messages, 2: basic messages, 1 errors only, 0: off
+    interface.log_level.func(global.log_level or 2)
+    -- "console" or "log" or "console,log"
+    interface.log_output.func('console')
 
     Init.initData()
     

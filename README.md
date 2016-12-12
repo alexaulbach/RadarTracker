@@ -106,39 +106,6 @@ It was updated to v0.13 by Optera (in the same thread) and me.
 
 Meanwhile the only remainings are the graphics, prototypes and some lines of code about the prediction of train-direction.
 
-#Version history
-0.3.4 2016-11-21
-- New Icons for other trackers, thanks to YuokiTani.
-
-0.3.3 2016-11-21
-- New Icon from movement tracker, thanks to YuokiTani.
-- Fix small bug with initialization of debugger.
-
-0.3.2 2016-11-06
-- Fixed: Debug-mode was initially on.
-- Change: Reversed research-order of movement- and immobile-tracker and other slight changes with research. Reversed graphics, too.
-
-0.3.1 2016-11-05
-- Added release script.
-- Second release on mods.factorio.com
-
-0.3.0 2016-10-31
-- Stabilized, immoveables and movement tracker now works reliable.
-- Debug-mode. I think the idea of the "debugger" is cool. It helped me a lot to find the bugs, to see, when an entity changed state.
-- New (ugly!) graphics to distinct better between the two types.
-
-0.2.0 2016-10-10
-- Silently reworking completely. No release.
-
-0.1.3 2016-09-30 
-- Introduced tracker types. Types are: trains (locos or wagons), stops (all train stops), cars (cars, tanks, satellite-uplink...); currently still only trains works.
-- Rewrote initialization. on a very large map (8 GiB) with >300 trains initialisation takes only 20 seconds vs. hours from before.
-- Avoid double reinitialization.
-- Re-increased scan rate cause I want to reduce average number of scans per train. Also looks much better.
-
-0.1.2 2016-09-04
-- Initial version
-
 # Links
 ## Git Hub
 https://github.com/alexaulbach/RadarTracker

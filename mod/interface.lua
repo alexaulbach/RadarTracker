@@ -1,89 +1,95 @@
 
 interface = {}
 
-
-interface.isInterfaceDocFunction = function(funcName)
-    if (string.sub(funcName, -4) == "_doc") then
-        return string.sub(funcName, 0, -5)
-    end
-end
-
 interface.initAllRemoteCalls = function()
     local interfaces = {}
-    for funcName, _ in pairs(interface) do
-        local funcName2 = interface.isInterfaceDocFunction(funcName)
-        if funcName2 then
-            interfaces[funcName2] = interface[funcName2]
+    for funcName, tab in pairs(interface) do
+        if type(tab) == "table" then
+            interfaces[funcName] = tab.func
         end
     end
-log("---- X " .. inspect(interfaces))
-
     remote.add_interface("RTR", interfaces)
 end
 
 ----------------------------------------------------------------------------------------
 
-interface.help_doc = ")         - This help"
+interface.help = {
+    help = "This help",
+    params = {},
+    func = function()
 
-interface.help = function()
+        game.player.print('')
+        game.player.print("-----  RadarTracker: Remote functions  -----")
 
-    game.player.print('')
-    game.player.print("-----  RadarTracker: Remote functions  -----")
-
-    for funcName, _ in pairs(interface) do
-        local funcName2 = interface.isInterfaceDocFunction(funcName)
-        if funcName2 then
-            game.player.print("|  " .. funcName2)
-            game.player.print("|    /c remote.call('RTR', '" .. funcName2 .. "'" .. interface[funcName])
+        for funcName, tab in pairs(interface) do
+            if type(tab) == "table" then
+                local params = ''
+                for _, v in pairs(tab.params) do
+                    if v then
+                        params = params .. ', ' .. v
+                    end
+                end
+                game.player.print("|  " .. funcName .. '  -  ' .. tab.help)
+                game.player.print("|    /c remote.call('RTR', '" .. funcName .. "'" .. params .. ")") 
+            end
         end
-    end
 
-    game.player.print('')
-    
-end
+        game.player.print('')
+
+    end
+}
 
 ----------------------------------------------------------------------------------------
 
-interface.log_level_doc  = ", level)  - Set Log-Level to level n.\n" ..
-        "|     4: everything, 3: scheduler messages, 2: basic messages, 1 errors only, 0: off"
-
-interface.log_level = function(level)
-    global.log_level = level
-    remote.call('RTR', 'log_status')
-end
+interface.log_level = {
+    help = "Set Log-Level to level n" .. 
+           " (4: everything, 3: scheduler messages, 2: basic messages, 1 errors only, 0: off)",
+    params = {"level"},
+    func = function(level)
+        global.log_level = level
+        remote.call('RTR', 'log_status')
+    end
+}
 
 ----------------------------------------------------------------------------------------
 
-interface.log_output_doc = ", 'console,log') - A set: 'console,log' or 'log' or 'console'"
-
-interface.log_output = function(log_set)
-    if log_set == nil or type(log_set) ~= 'string' then
-        game.player.print("[RTR] log_output: Wrong parameter type")
-        return
-    end
-    local real_set = {}
-    for i in string.gmatch(log_set, "[^,]*") do
-        if i == 'console' or i == 'log' then
-            real_set[i] = i
+interface.log_output = {
+    help = "Sets direction of output, a set: 'console,log' or 'log' or 'console'",
+    params = {"direction"},
+    func = function(direction)
+        if direction == nil or type(direction) ~= 'string' then
+            game.player.print("[RTR] log_output: Wrong parameter type")
+            return
         end
-    end
+        local directionSet = {}
+        for i in string.gmatch(direction, "[^,]*") do
+            if i == 'console' or i == 'log' then
+                directionSet[i] = i
+            end
+        end
 
-    global.log_output = real_set
-    remote.call('RTR', 'log_status')
-end
+        global.log_output = directionSet
+        remote.call('RTR', 'log_status')
+    end
+}
 
 ----------------------------------------------------------------------------------------
-interface.log_status_doc = ")         - show current log status"
 
-interface.log_status = function()
-    local ctab = {}
-    local n = 1
-    for _, v in pairs(global.log_output) do
-        ctab[n] = v
-        n = n + 1
+interface.log_status = {
+    help = "show current log status",
+    params = {},
+    func = function()
+        if type(global.log_output) ~= "table" then
+            global.log_output = {}
+        end
+        local tmptab = {}
+        local n = 1
+        -- count output directions and convert to simple list
+        for _, v in pairs(global.log_output) do
+            tmptab[n] = v
+            n = n + 1
+        end
+        if #tmptab == 0 then tmptab = {"No Output! Use remote.call('RTR', 'help') to see possible settings"} end
+        printmsg("<log_status> log-level: " .. global.log_level .. " - log-output: " .. table.concat(tmptab, ', '))
     end
-    if #ctab == 0 then ctab = {"No Output! Use remote.call('RTR', 'help') to see possible settings"} end
-    printmsg("[RTR] <log_status> log-level: " .. global.log_level .. " - log-output: " .. table.concat(ctab, ', '))
-end
-
-----------------------------------------------------------------------------------------
+}

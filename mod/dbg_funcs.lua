@@ -38,66 +38,73 @@ dbg._ftext = function(surface, pos, text, offset)
     surface.create_entity({ name = "flying-text", position = pos, text = text})
 end
 
+
 ------------------------------------------------------------------------------
 --- Add debug-methods to interface
 ------------------------------------------------------------------------------
 
-interface.list_doc = ")  - Show all currently tracked objects (ordered by force and tracker)"
-
-interface.list = function()
-    for fn, trackers in pairs(global._ntttrkr) do
-        printmsg("--------- " .. fn .. " ---------")
-        for tracker, units in pairs(trackers) do
-            printmsg("---- " .. tracker)
-            for unit_number, ntt in pairs(units) do
-                prnt_ntt(ntt, unit_number, fn)
+interface.list = {
+    help = "Show all currently tracked objects (ordered by force and tracker)",
+    params = {},
+    func = function()
+        for fn, trackers in pairs(global._ntttrkr) do
+            printmsg("--------- " .. fn .. " ---------")
+            for tracker, units in pairs(trackers) do
+                printmsg("---- " .. tracker)
+                for unit_number, ntt in pairs(units) do
+                    prnt_ntt(ntt, unit_number, fn)
+                end
             end
         end
     end
-end
+}
 
 -------------------------------------------------------------------------------
 
-interface.show_doc = ")  - Show tracker entry of hovered entity (Only if tracked!)"
-
-interface.show = function()
-    if game.player.selected == nil then
-        printmsg("NOTHING SELECTED: You need to select a tracked entity (train, car...)")
-        return
-    end
-    
-    entity = game.player.selected
-    local unit_number
-    if entity.type == 'train' then
-        unit_number = entity.train.back_stock.unit_number
-    else
-        unit_number = entity.unit_number
-    end
-    local ntt = container.get(unit_number)
-    if ntt then
-        prnt_ntt(ntt, unit_number)
-        if ntt.entity.unit_number ~= unit_number then
-            printmsg("UNIT NUMBER NOT EQUAL!")
+interface.show = {
+    help = "Show tracker entry of hovered entity (Only if tracked!)",
+    params = {},
+    func = function()
+        if game.player.selected == nil then
+            printmsg("NOTHING SELECTED: You need to select a tracked entity (train, car...)")
+            return
+        end
+        
+        entity = game.player.selected
+        local unit_number
+        if entity.type == 'train' then
+            unit_number = entity.train.back_stock.unit_number
+        else
+            unit_number = entity.unit_number
+        end
+        local ntt = container.get(unit_number)
+        if ntt then
+            prnt_ntt(ntt, unit_number)
+            if ntt.entity.unit_number ~= unit_number then
+                printmsg("UNIT NUMBER NOT EQUAL!")
+            end
         end
     end
-end
+}
 
 -------------------------------------------------------------------------------
 
-interface.reinit_doc = ")  - (Re-)initialize everything"
-
-interface.reinit = function()
-    Init.clearInitialization()
-    Init.init()
-end
-
--------------------------------------------------------------------------------
-
-interface.debug_doc = ") - switch debug-functionality on/off"
-
-interface.debug = function()
-    __switchDebug()
-    printmsg("Debugging: " .. tostring(global.debugger))
-end
+interface.re_init = {
+    help = "(Re-)initialize everything",
+    params = {},
+    func = function()
+        Init.clearInitialization()
+        Init.init()
+    end
+}
 
 -------------------------------------------------------------------------------
+
+interface.debug = {
+    help = "Switch debug-functionality on/off",
+    params = {},
+    func = function()
+        __switchDebug()
+        printmsg("Debugging: " .. tostring(global.debugger))
+    end
+}
