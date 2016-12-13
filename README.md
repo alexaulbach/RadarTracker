@@ -121,13 +121,13 @@ Meanwhile the only remainings are the graphics, prototypes and some lines of cod
 https://github.com/alexaulbach/RadarTracker
 
 ## Factorio Forum
-
+https://forums.factorio.com/viewtopic.php?f=97&t=35805
 
 ---------------------------------------
 
 #Ideas/TODOs
 V0.3:
-- add roboports to immoveables tracker
+- improve performance: reduce rescan, when train-state-change
 - configurable scanned_radius for each entity-type.
 - don't track back train when moving
 - Add LICENSE.
