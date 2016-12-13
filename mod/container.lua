@@ -15,7 +15,7 @@ container.set = function(ntt)
             end
         end
         if global.log_level > 2 then
-            prnt_n_log("Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
+            printmsg("Added unit_number " .. unit_number .. " Force " .. fn .. " trkr: " .. ntt.tracker .. " manager " .. ntt.manager)
         end
         dbg.ftext(ntt.entity.surface, ntt.entity.position, "ADD " .. ntt.tracker .. " "..ntt.manager .. unit_number)
         ntt.force_name   = fn

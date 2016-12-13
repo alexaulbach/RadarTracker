@@ -7,6 +7,11 @@ event_handler.built_RT_entity = function(entity)
 end
 
 
+
+
+
+
+
 event_handler.sector_scan_trackers = {}
 
 event_handler.sector_scan_trackers.movement = function(radar)

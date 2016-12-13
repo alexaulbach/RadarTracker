@@ -1,0 +1,13 @@
+
+
+/c game.player.print("FRONT STOCK" .. game.player.selected.train.front_stock.unit_number);
+game.player.print("BACK STOCK" ..game.player.selected.train.back_stock.unit_number);
+for i, loco in pairs(game.player.selected.train.locomotives.front_movers) do
+	game.player.print("Front Mover " .. i .. " . " .. loco.unit_number)
+end
+for i, loco in pairs(game.player.selected.train.locomotives.back_movers) do
+	game.player.print("Back Mover " .. i .. " . " .. loco.unit_number)
+end
+for i, carr in pairs(game.player.selected.train.carriages) do
+	game.player.print("Carr " .. i .. " . " .. carr.unit_number)
+end
