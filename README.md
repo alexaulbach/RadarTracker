@@ -11,6 +11,8 @@ Radar-tracker tries to let you keep track of your factory: It triggers _charting
   - Waiting vehicles will be charted every 17.5 seconds.
 - The Immoveables-tracker tracks train-stops every 30 seconds.
 
+---------------------------------------
+
 # Long description
 This mod is for bigger factories, that already covers a wide area and a bigger train-network.
 But it is also useful for exploration by car/tank.
@@ -46,6 +48,8 @@ This mod tries to achieve this goals:
 - Reduce need for CPU-expensive full-scan radar and replace with a "good-enough" charting.
 - Add a new game-play that it makes sense to switch the new trackers off if they take too much energy.
 - Radar only for intensive non-stop-scanning.
+
+---------------------------------------
 
 # Docs
 
@@ -84,6 +88,8 @@ TODO: (auto-generated) list of needed power
 Use /c remote.call('RT', 'help') to see all commands.
 TODO: Generate list
 
+---------------------------------------
+
 # Features:
 - This is my first Factorio mod, I appreciate positive and negative critics.
 - Fast initialization: Initial scan of a 20,000 tiles-map in under 10 seconds (vs. half an hour). 
@@ -91,6 +97,8 @@ TODO: Generate list
 - CPU-save: For 300 trains (600 entities) only 3-6 updates per second slower. (Well, still too slow)
 - Debug-mode. Useful and interesting...
 - Configuration file for energy-usages etc.
+
+---------------------------------------
 
 #Background
 To be honest, the biggest reason why I did this was, that I needed something to see my trains on my 20km² map.
@@ -106,17 +114,22 @@ It was updated to v0.13 by Optera (in the same thread) and me.
 
 Meanwhile the only remainings are the graphics, prototypes and some lines of code about the prediction of train-direction.
 
+---------------------------------------
+
 # Links
 ## Git Hub
 https://github.com/alexaulbach/RadarTracker
 
 ## Factorio Forum
-TODO
+
+
+---------------------------------------
 
 #Ideas/TODOs
 V0.3:
 - add roboports to immoveables tracker
 - configurable scanned_radius for each entity-type.
+- don't track back train when moving
 - Add LICENSE.
 - Playing for balancing.
 - Make code nice. More clear modules...
