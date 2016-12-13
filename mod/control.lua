@@ -7,14 +7,6 @@ inspect = require('inspect')
 
 require 'config'
 require 'basics'
-require 'init'
-require 'container'
-require 'manager'
-require 'events'
-require 'interface'
-require 'dbg'
-
-interface.initAllRemoteCalls()
 
 
 RTDEF = {
@@ -28,7 +20,7 @@ RTDEF = {
         change   = 6,    -- scanning changes, when a robot places/removes an entity. Or special scanning rockets?
         random   = 7,    -- scanning randomly, like construction bots?
     },
-    
+
     -- definition of entity-type -> manager
     managers = {
         ["train-stop"]  = "stops",
@@ -38,6 +30,16 @@ RTDEF = {
         ["car"]         = "cars",
     }
 }
+
+require 'init'
+require 'container'
+require 'manager'
+require 'events'
+require 'interface'
+require 'dbg'
+
+interface.initAllRemoteCalls()
+
 
 ---------------------------------------------------------------------------------------------------
 
