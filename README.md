@@ -1,5 +1,5 @@
 # RadarTracker
-A Factorio mod, that adds "trackers", which can track **trains, cars, tanks (any vehicle-type) and immoveables like train-stops**..
+A Factorio mod, that adds "trackers", which can track **trains, cars, tanks (any vehicle-type) and immoveables like train-stops and roboports**..
 
 Graphics: Trackers by YuokiTani. Thanks to him.
 
@@ -9,7 +9,7 @@ Radar-tracker tries to let you keep track of your factory: It triggers _charting
   - Technique can be researched with Logistics-2.
   - Moving vehicles will be charted every 0.5 seconds, and the radars scans into the forward-direction.
   - Waiting vehicles will be charted every 17.5 seconds.
-- The Immoveables-tracker tracks train-stops every 30 seconds.
+- The Immoveables-tracker tracks train-stops and roboports every 30 seconds.
 
 ---------------------------------------
 
@@ -64,9 +64,9 @@ If vehicle is driving: Every 1/2 seconds and tries to look forward. (This is wit
 If it is waiting: Every 17.5 seconds (10 sconds visible, 7.5 in fog).
 
 ### Immovebles tracker
-Charts train-stops every 30 seconds. No need to place radars everywhere.
+Charts train-stops and roboports every 30 seconds. No need to place radars everywhere.
 
-This means: A train-stop is charted once every 30 seconds, then it keeps 10 seconds completly charted and 20 seconds in fog-of-war until it is re-charted. This is with default trains a good compromise.
+This means: Train-stops (and roboports) are charted once every 30 seconds; they keep charted 10 seconds completly and 20 seconds in fog-of-war (until it is re-charted). This is with default trains a good compromise.
 
 ### Rotation tracker
 

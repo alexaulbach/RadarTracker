@@ -93,6 +93,22 @@ manager.stops.add = function(entity)
     container.set(ntt)
 end
 
+
+--------------------------------------------------------------------
+-- Ports
+--------------------------------------------------------------------
+
+manager.ports = {}
+
+manager.ports.add = function(entity)
+    local ntt = table.deepcopy(nttInfo)
+    ntt.manager = "ports"
+    ntt.tracker = RTDEF.tracker.unmoved
+    ntt.entity  = entity
+    container.set(ntt)
+end
+
+
 --------------------------------------------------------------------
 -- Cars
 --------------------------------------------------------------------
