@@ -58,3 +58,5 @@ if [ -f "$targetZip" ] ; then
 fi
 zip -q -r "$targetZip" .
 cd "$currentDir"
+
+echo "Done."
