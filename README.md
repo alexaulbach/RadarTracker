@@ -127,7 +127,7 @@ https://forums.factorio.com/viewtopic.php?f=97&t=35805
 
 #Ideas/TODOs
 V0.3:
-- improve performance: reduce rescan, when train-state-change
+- improve performance: reduce rescan, when train-state-change, optimize manager
 - configurable scanned_radius for each entity-type.
 - don't track back train when moving
 - Add LICENSE.
@@ -156,3 +156,19 @@ V0.x:
 - Upgrade function to convert (several) the train-tracker radars to to radar-tracker (good learning subproject).
 - Scanner-robots. You can send them out and they will automatically reveal map.
 - "Train Radar"  - some special type of locomotive/wagon. The train can be programmed to drive in circles to scan the area beside your rails in regular intervals, but needs excessive amounts of energy.
+
+New ideas:
+Waiting vehicles:
+- are tracked "randomly"
+
+Immoveable Tracker:
+- can track also roboports : pseudo random flash
+- construction bots, when placing/mining
+- alert area
+
+Tracker that keeps things tidy:
+- Remove things on ground/trees, 
+- Remove emptied miners (and belts)
+
+Explorer Bots
+- fly to unexplored area until storage empty by 50%

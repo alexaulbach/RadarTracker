@@ -75,8 +75,10 @@ script.on_event(defines.events.on_sector_scanned, function(event)
     local radar = event.radar
 
     if string.sub(radar.name, -7) == 'tracker' then
-        if global.log_level > 3 then printmsg("Tracker scanned: " .. radar.name .. " calling " .. string.sub(radar.name,0, -9)) end
-        event_handler.sector_scan_trackers[string.sub(radar.name,0, -9)](radar) 
+        if global.log_level > 3 then
+            printmsg("Tracker scanned: " .. radar.name .. " calling " .. string.sub(radar.name,0, -9))
+        end
+        event_handler.sector_scan_trackers[string.sub(radar.name,0, -9)](radar)
     end
 end)
 
