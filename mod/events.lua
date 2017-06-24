@@ -37,17 +37,31 @@ event_handler.sector_scan_trackers.movement = function(radar)
                     end
 
                     -- todo: cars should "forsee" one chunk more, than the players radar  --> config
+										-- limit sight range (Optera)
+										local scan_ahead_x = ent.position.x + ent.speed * _config["movement-tracker"].precognition * 10 * math.sin(2*math.pi * ent.orientation)
+										if scan_ahead_x > _config["movement-tracker"].sight_range_limit then
+											scan_ahead_x = _config["movement-tracker"].sight_range_limit
+										elseif scan_ahead_x < -_config["movement-tracker"].sight_range_limit then
+											scan_ahead_x = -_config["movement-tracker"].sight_range_limit
+										end
+										local scan_ahead_y = ent.position.y - ent.speed * _config["movement-tracker"].precognition * 10 * math.cos(2*math.pi * ent.orientation)
+										if scan_ahead_y > _config["movement-tracker"].sight_range_limit then
+											scan_ahead_y = _config["movement-tracker"].sight_range_limit
+										elseif scan_ahead_y < -_config["movement-tracker"].sight_range_limit then
+											scan_ahead_y = -_config["movement-tracker"].sight_range_limit
+										end
+
                     area = Area.adjust({
                         {
                             ent.position.x,
                             ent.position.y
                         }, {
-                            ent.position.x + ent.speed * _config["movement-tracker"].precognition * 10 * math.sin(2*math.pi * ent.orientation),
-                            ent.position.y - ent.speed * _config["movement-tracker"].precognition * 10 * math.cos(2*math.pi * ent.orientation)
+                            scan_ahead_x,
+                            scan_ahead_y
                         }
                     })
-                
-                -- handle trains    
+
+                -- handle trains
                 elseif ntt.manager == "trains" then
 
                     -- todo: the "back-stock" of a train doesn't need to be tracked when running (gives unwanted double charting in curves)
@@ -78,13 +92,13 @@ event_handler.sector_scan_trackers.immoveables = function(radar)
     for unit_number, ntt in pairs(container.get_all_tracker_by_force(RTDEF.tracker.unmoved, radar.force.name)) do
         local ent = ntt.entity
         if ent.valid then
-    
+
             local x1 = ent.position.x
             local y1 = ent.position.y
             local area = Area.expand({{x1, y1}, {x1, y1}}, _config["immoveables-tracker"].scanned_radius)
             radar.force.chart(radar.surface, area)
             dbg.charting(radar.surface, area, unit_number)
-    
+
             -- look if suddenly moving (again)
             if ntt.manager == "cars" then
                 dbg.ftext(radar.surface, ent.position, "CAR " .. ntt.tracker .. " - " .. ent.speed)
@@ -98,7 +112,7 @@ event_handler.sector_scan_trackers.immoveables = function(radar)
                     container.set(ntt)
                 end
             end
-    
+
         else
             container.remove(ntt)
         end
