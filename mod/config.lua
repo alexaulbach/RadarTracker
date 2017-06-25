@@ -29,3 +29,5 @@ _config = {
 -- calculate after how many intervals of the movement-tracker the waiting tracker is triggered.
 _config["movement-tracker"].waiting_tracker_interval = math.floor(_config["movement-tracker"].waiting_tracker_refresh_time / _config["movement-tracker"].refresh_time)
 
+-- maximum sight range regardless of vehicle speed
+_config["movement-tracker"].sight_range_limit = 96
